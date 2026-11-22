@@ -639,20 +639,44 @@ function drawMidnightLakeAndReflections(
   ctx.fillStyle = lakeGrad;
   ctx.fillRect(0, featherTop, width, height - featherTop);
 
-  // Subtle ambient moonlight ripples across the lake surface
+  // Soft moonlit water shimmer (feathered radial perspective bands + subtle off-center moon column)
   ctx.save();
-  for (let i = 0; i < 14; i++) {
-    const depthRatio = ((i + 0.5) / 14);
-    const ry = waterY + 12 + depthRatio * (waterDepth * 0.78);
-    if (ry > height + 8) continue;
-    const baseRx = ((i * 0.37 + 0.13) % 1) * width;
-    const rx = baseRx + Math.sin(tick * 0.45 + i * 1.7) * 18;
-    const rw = (36 + (i % 4) * 24) * (0.65 + depthRatio * 0.7);
-    const alpha = (0.045 + Math.sin(tick * 0.9 + i * 2.1) * 0.02) * (1 - depthRatio * 0.45);
-    ctx.fillStyle = `rgba(186, 214, 244, ${alpha.toFixed(3)})`;
+  const moonCenterX = width * 0.68;
+  for (let i = 0; i < 16; i++) {
+    const t = (i + 0.5) / 16;
+    const perspective = t * t; // Tighter near horizon, wider in foreground
+    const ry = waterY + 8 + perspective * (waterDepth * 0.84);
+    if (ry > height + 10) continue;
+
+    // Alternate between a soft off-center moonlight shimmer column and wide ambient lake swells
+    const inMoonColumn = i % 3 !== 0;
+    const spread = inMoonColumn
+      ? (Math.sin(i * 2.7) * 0.5) * (34 + perspective * 140)
+      : (Math.sin(i * 4.1) * 0.5) * width * 0.72;
+    const sway = Math.sin(tick * 0.55 + i * 1.4) * (6 + perspective * 14);
+    const rx = (inMoonColumn ? moonCenterX : width * 0.5) + spread + sway;
+
+    const rw = inMoonColumn
+      ? (18 + (i % 4) * 10) * (0.55 + perspective * 1.25)
+      : (55 + (i % 3) * 28) * (0.7 + perspective * 0.8);
+    const rh = 1.2 + perspective * 2.2;
+
+    const pulse = 0.72 + Math.sin(tick * 1.1 + i * 1.9) * 0.28;
+    const baseAlpha = inMoonColumn ? 0.095 : 0.038;
+    const alpha = baseAlpha * pulse * (1 - perspective * 0.35);
+
+    ctx.save();
+    ctx.translate(rx, ry);
+    ctx.scale(rw, rh);
+    const shimmer = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+    shimmer.addColorStop(0, `rgba(196, 222, 248, ${alpha.toFixed(3)})`);
+    shimmer.addColorStop(0.45, `rgba(162, 196, 232, ${(alpha * 0.45).toFixed(3)})`);
+    shimmer.addColorStop(1, "rgba(162, 196, 232, 0)");
+    ctx.fillStyle = shimmer;
     ctx.beginPath();
-    ctx.ellipse(rx, ry, rw, 1.1, 0, 0, Math.PI * 2);
+    ctx.arc(0, 0, 1, 0, Math.PI * 2);
     ctx.fill();
+    ctx.restore();
   }
   ctx.restore();
 

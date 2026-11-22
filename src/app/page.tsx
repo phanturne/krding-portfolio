@@ -436,17 +436,14 @@ export default function PortfolioPage() {
         className="relative z-10 flex-1 max-w-[1200px] w-full mx-auto px-5 sm:px-8"
       >
         {/* Concise Intro */}
-        <section className="pt-10 pb-10 sm:pt-14 sm:pb-12 border-b border-rule">
-          <h1 className="font-display text-3xl sm:text-5xl font-normal tracking-[-0.02em] text-ink leading-[1.12] max-w-[24ch]">
-            Full-stack engineer building distributed services, financial models,
-            and browser games.
+        <section className="pt-8 pb-8 sm:pt-10 sm:pb-9 border-b border-rule">
+          <h1 className="font-display text-3xl sm:text-5xl font-normal tracking-[-0.02em] text-ink leading-[1.12]">
+            Software Engineer
           </h1>
-          <p className="mt-4 text-sm sm:text-base text-inkMuted leading-relaxed max-w-[65ch]">
-            Software Engineer at{" "}
+          <p className="mt-3 text-sm sm:text-base text-inkMuted leading-relaxed max-w-[65ch]">
             <span className="text-ink font-medium">Amazon Prime Video</span> in
-            Seattle and M.S. CS (Machine Learning) student at{" "}
-            <span className="text-ink font-medium">Georgia Tech</span>. Below
-            are two shipped systems and my engineering background.
+            Seattle · M.S. CS (Machine Learning) at{" "}
+            <span className="text-ink font-medium">Georgia Tech</span>.
           </p>
         </section>
 
