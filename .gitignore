@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js build & types
+.next/
+out/
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Local review screenshots & OS files
+.impeccable/review/
+.DS_Store
+*.log

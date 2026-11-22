@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-21T23:00:00-08:00",
+  "title": "Design System: Kevin Ding — Midnight Cinema & X-Ray Showcase",
+  "extensions": {
+    "colorMeta": {
+      "prime-cyan": {
+        "role": "primary",
+        "displayName": "Prime Cyan",
+        "canonical": "#00a8e1",
+        "tonalRamp": ["#042433", "#073b52", "#0a5878", "#0284b5", "#00a8e1", "#38bdf8", "#7dd3fc", "#e0f2fe"]
+      },
+      "electric-blue": {
+        "role": "secondary",
+        "displayName": "Electric Sky Blue",
+        "canonical": "#38bdf8",
+        "tonalRamp": ["#082f49", "#0c4a6e", "#075985", "#0284c7", "#38bdf8", "#7dd3fc", "#bae6fd", "#f0f9ff"]
+      },
+      "mint-teal": {
+        "role": "tertiary",
+        "displayName": "Mint Teal",
+        "canonical": "#2dd4bf",
+        "tonalRamp": ["#042f2e", "#134e4a", "#0f766e", "#0d9488", "#2dd4bf", "#5eead4", "#99f6e4", "#ccfbf1"]
+      },
+      "theater-bg": {
+        "role": "neutral",
+        "displayName": "Midnight Theater Slate",
+        "canonical": "#060b14",
+        "tonalRamp": ["#020409", "#04070e", "#060b14", "#10192b", "#1e293b", "#334155", "#64748b", "#94a3b8"]
+      },
+      "ice-white": {
+        "role": "neutral",
+        "displayName": "Ice White Ink",
+        "canonical": "#f0f6ff",
+        "tonalRamp": ["#1e293b", "#334155", "#475569", "#64748b", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f0f6ff"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Widescreen Display",
+        "purpose": "Top header identity."
+      },
+      "headline": {
+        "displayName": "Section Headline",
+        "purpose": "Major section titles."
+      },
+      "title": {
+        "displayName": "Feature Release Title",
+        "purpose": "Flagship project titles and experience cards."
+      },
+      "body": {
+        "displayName": "Technical Body",
+        "purpose": "Architecture summaries and descriptions."
+      },
+      "label": {
+        "displayName": "X-Ray Monospace Label",
+        "purpose": "X-Ray HUD bars, scene tabs, and tabular telemetry."
+      }
+    },
+    "shadows": [
+      {
+        "name": "theater-elevation",
+        "value": "0 24px 48px -12px rgba(2, 5, 12, 0.78), 0 6px 16px -4px rgba(2, 5, 12, 0.55)",
+        "purpose": "Soft theater depth under flagship showcase cards."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Smooth X-Ray mode transitions and slider thumb response."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Prime Cyan Launch Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "High-contrast cyan action button for launching live deployments.",
+      "html": "<a href=\"#\" class=\"ds-btn-primary\">LAUNCH APP</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 6px; background: #00a8e1; color: #060b14; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 6px; text-decoration: none; transition: background-color 150ms ease; } .ds-btn-primary:hover { background: #f0f6ff; } .ds-btn-primary:focus-visible { outline: 2px solid #00a8e1; outline-offset: 2px; }"
+    },
+    {
+      "name": "X-Ray HUD Inspection Bar",
+      "kind": "custom",
+      "refersTo": "card-feature",
+      "description": "Signature top bar on flagship project cards for toggling between real screenshots and live X-Ray engine sandboxes.",
+      "html": "<div class=\"ds-xray-bar\"><span>X-RAY // PRODUCTION UI + LIVE DCF ENGINE</span><span class=\"ds-xray-count\">521 EQUITIES</span></div>",
+      "css": ".ds-xray-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 168, 225, 0.12); border: 1px solid #00a8e1; padding: 8px 14px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #f0f6ff; } .ds-xray-count { color: #00a8e1; font-weight: 700; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Scene Switcher Tab",
+      "kind": "chip",
+      "refersTo": "chip-scene",
+      "description": "Tab pill for switching between real production UI screenshots.",
+      "html": "<button type=\"button\" class=\"ds-chip-scene\">Dual-Pane Cockpit</button>",
+      "css": ".ds-chip-scene { background: #00a8e1; color: #060b14; border: 1px solid #00a8e1; border-radius: 4px; padding: 4px 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; cursor: pointer; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Midnight Cinema & X-Ray Showcase",
+    "overview": "Kevin Ding's personal website draws subtle inspiration from his engineering role at Amazon Prime Video and his off-hours love for C-dramas and K-dramas, framing his two flagship software systems (StressAlpha and PokéBastion TD) as widescreen feature releases inside a midnight-blue screening theater.",
+    "keyCharacteristics": [
+      "Midnight Screening Atmosphere: Deep theater slate (#060b14) illuminated by an overhead cobalt-blue projection radial glow (#102347).",
+      "Signature X-Ray HUD Bar: Each flagship card opens with a translucent cyan-bordered X-Ray bar displaying system scale and an instant toggle into the live engine.",
+      "Widescreen 16:10 Screen Bays: Recessed #04070e viewports frame authentic production screenshots and interactive sandboxes at identical 16:10 proportions.",
+      "Zero-Jitter Tabular Readouts: All financial deltas, WACC shocks, and pathfinding node counts enforce font-variant-numeric: tabular-nums."
+    ],
+    "rules": [
+      {
+        "name": "The X-Ray Inspection Rule",
+        "body": "Every flagship release card carries a top X-Ray HUD bar (#00a8e1 border on rgba(0, 168, 225, 0.12) fill) that lets visitors toggle the 16:10 screen bay between real production screenshots and the live interactive algorithm engine.",
+        "section": "colors"
+      },
+      {
+        "name": "The Real-Proof-First Rule",
+        "body": "Both flagship showcases default to real high-resolution production screenshots so visitors immediately see the authentic shipped UI before exploring the X-Ray sandbox.",
+        "section": "colors"
+      },
+      {
+        "name": "The Zero-Jitter Tabular Rule",
+        "body": "All numerical readouts in the X-Ray sandboxes apply font-variant-numeric: tabular-nums (tnum, zero).",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Kicker Heading Rule",
+        "body": "Headings lead their container directly or pair inline with a right-aligned status badge; never stack a small kicker or eyebrow label above a heading.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do lead both flagship cards with real 16:10 production screenshots and provide the X-Ray HUD toggle to inspect the live interactive DCF and A* engines.",
+      "Do keep the palette cohesive across deep midnight blues (#060b14, #102347, #10192b) and luminous cyan/sky accents (#00a8e1, #38bdf8, #7dd3fc).",
+      "Do enforce tabular-nums on every live valuation delta and pathfinding counter."
+    ],
+    "donts": [
+      "Don't use rock-climbing jargon or unrelated sport metaphors on engineering sections.",
+      "Don't place kickers or eyebrow labels above <h2> or <h3> headings.",
+      "Don't use hard zero-blur neobrutalist offset shadows."
+    ]
+  }
+}

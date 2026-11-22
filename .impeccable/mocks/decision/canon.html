@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Category Standard — Kevin Ding</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1440px; height: 900px; overflow: hidden;
+    background: #090a0f; color: #f8fafc;
+    font-family: 'Geist', sans-serif; padding: 48px 80px;
+  }
+  .hero { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 36px; border-bottom: 1px solid #1e293b; padding-bottom: 24px; }
+  h1 { font-size: 44px; font-weight: 700; }
+  .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; height: 640px; }
+  .card { background: #11131c; border: 1px solid #1e293b; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+  .mono { font-family: 'Geist Mono', monospace; font-size: 13px; color: #3b82f6; }
+  h2 { font-size: 26px; margin: 8px 0; }
+  .box { background: #090a0f; border: 1px solid #1e293b; border-radius: 10px; padding: 18px; flex: 1; margin: 16px 0; }
+</style>
+</head>
+<body>
+  <div class="hero">
+    <div>
+      <h1>Kevin Ding</h1>
+      <p style="color:#94a3b8; font-size:18px; margin-top:6px">Full-Stack Software Engineer @ Amazon Prime Video · MS CS (ML) @ Georgia Tech</p>
+    </div>
+    <div class="mono">github.com/phanturne</div>
+  </div>
+  <div class="bento">
+    <div class="card">
+      <div><div class="mono">FINTECH / NEXT.JS</div><h2>StressAlpha</h2><p style="color:#94a3b8; font-size:15px">Scenario stress-testing across 521 equities.</p></div>
+      <div class="box"><div style="font-size:32px; font-weight:700">$142.85</div></div>
+      <div class="mono">stressalpha.vercel.app ↗</div>
+    </div>
+    <div class="card">
+      <div><div class="mono">GAME DEV / PHASER 3</div><h2>PokéBastion TD</h2><p style="color:#94a3b8; font-size:15px">28×18 dynamic pathfinding tower defense.</p></div>
+      <div class="box"><div style="font-size:20px">Live A* Grid Sandbox</div></div>
+      <div class="mono">phanturne.github.io/pokebastion ↗</div>
+    </div>
+    <div class="card">
+      <div><div class="mono">AI / SECOND BRAIN</div><h2>Sapling & Life Log</h2><p style="color:#94a3b8; font-size:15px">127 tabs organizer + Bouldering, Cooking & Dramas.</p></div>
+      <div class="box"><div style="font-size:20px">Semantic Clusters</div></div>
+      <div class="mono">github.com/phanturne/sapling ↗</div>
+    </div>
+  </div>
+</body>
+</html>

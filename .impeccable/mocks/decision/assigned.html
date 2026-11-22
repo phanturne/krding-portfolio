@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Topographic Route & Hold Wall — Kevin Ding</title>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1440px; height: 900px; overflow: hidden;
+    background: #181a1f; color: #f4f1ea;
+    font-family: 'Chakra Petch', sans-serif;
+    position: relative;
+    background-image: radial-gradient(rgba(244,241,234,0.12) 1.5px, transparent 1.5px);
+    background-size: 36px 36px;
+  }
+  .topo-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+  .header-bar {
+    position: relative; z-index: 2;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 28px 48px; border-bottom: 2px solid #2d313b;
+    background: rgba(24,26,31,0.92);
+  }
+  .title-block h1 {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-size: 56px; letter-spacing: 0.02em; text-transform: uppercase; line-height: 0.95;
+  }
+  .route-tag {
+    display: inline-block; background: #e04f33; color: #181a1f;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    padding: 4px 10px; font-size: 14px; margin-left: 14px; vertical-align: middle;
+  }
+  .telemetry {
+    display: flex; gap: 16px; font-family: 'JetBrains Mono', monospace;
+  }
+  .cell-mask {
+    background: #101216; border: 1px solid #323742; padding: 10px 16px;
+    min-width: 150px;
+  }
+  .cell-label { font-size: 11px; color: #8c92a4; text-transform: uppercase; }
+  .cell-val { font-size: 26px; font-weight: 600; color: #25a18e; letter-spacing: 0.05em; }
+  .wall-grid {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1.15fr 1.15fr 0.85fr;
+    gap: 28px; padding: 36px 48px; height: 760px;
+  }
+  .hold-plate {
+    background: #20232a; border: 2px solid #f4f1ea;
+    padding: 24px; display: flex; flex-direction: column; justify-content: space-between;
+    position: relative;
+    box-shadow: 10px 12px 0 rgba(0,0,0,0.45);
+  }
+  .hold-plate.v7 { border-color: #e04f33; }
+  .hold-plate.v6 { border-color: #25a18e; }
+  .hold-plate.v5 { border-color: #eab308; }
+  .grade-pill {
+    position: absolute; top: -14px; right: 20px;
+    padding: 4px 14px; font-family: 'Big Shoulders Display', sans-serif;
+    font-size: 24px; font-weight: 900; background: #e04f33; color: #181a1f;
+  }
+  .v6 .grade-pill { background: #25a18e; }
+  .v5 .grade-pill { background: #eab308; }
+  .plate-title { font-family: 'Big Shoulders Display', sans-serif; font-size: 38px; text-transform: uppercase; margin-bottom: 6px; }
+  .plate-sub { font-size: 14px; color: #b8b5ad; line-height: 1.4; margin-bottom: 18px; }
+  .widget-box {
+    background: #131519; border: 1px solid #323640; padding: 18px; flex: 1;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .delta-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    font-family: 'JetBrains Mono', monospace; border-bottom: 1px dashed #323640; padding-bottom: 12px;
+  }
+  .slider-mock { height: 10px; background: #2a2e37; position: relative; margin: 14px 0; }
+  .slider-fill { width: 68%; height: 100%; background: #e04f33; }
+  .grid-28 {
+    display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; flex: 1; margin: 10px 0;
+  }
+  .g-cell { background: #1d2026; border: 1px solid #2b303a; }
+  .g-wall { background: #f4f1ea; }
+  .g-path { background: rgba(37,161,142,0.45); border-color: #25a18e; }
+  .footer-meta {
+    display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #8c92a4; margin-top: 14px;
+  }
+</style>
+</head>
+<body>
+  <svg class="topo-svg" viewBox="0 0 1440 900">
+    <path d="M 120 120 C 350 280, 480 180, 720 340 S 1100 500, 1340 280" fill="none" stroke="#e04f33" stroke-width="3" stroke-dasharray="8 6"/>
+    <path d="M 240 820 C 500 640, 680 720, 980 480" fill="none" stroke="#25a18e" stroke-width="2.5"/>
+  </svg>
+  <header class="header-bar">
+    <div class="title-block">
+      <h1>KEVIN DING <span class="route-tag">SECTOR 01 // SYSTEMS WALL</span></h1>
+      <p style="font-size:15px; color:#b8b5ad; margin-top:6px;">Full-Stack SWE @ Amazon Prime Video · M.S. CS (ML) Georgia Tech · B.S. CS UC Santa Cruz</p>
+    </div>
+    <div class="telemetry">
+      <div class="cell-mask"><div class="cell-label">EQUITIES MODELED</div><div class="cell-val">0521.0</div></div>
+      <div class="cell-mask"><div class="cell-label">A* GRID LATENCY</div><div class="cell-val">00.4ms</div></div>
+      <div class="cell-mask"><div class="cell-label">OFF-HOURS SEND</div><div class="cell-val" style="color:#e04f33">V6/V7</div></div>
+    </div>
+  </header>
+  <main class="wall-grid">
+    <section class="hold-plate v7">
+      <div class="grade-pill">V7 PROBLEM // DCF ENGINE</div>
+      <div>
+        <h2 class="plate-title">StressAlpha</h2>
+        <p class="plate-sub">Deterministic equity earnings & scenario stress-testing across 521 stocks. Drag drivers to shock valuation live.</p>
+      </div>
+      <div class="widget-box">
+        <div class="delta-row">
+          <div><div class="cell-label">BASELINE IV</div><div style="font-size:28px; color:#f4f1ea">$184.20</div></div>
+          <div><div class="cell-label">STRESSED IV</div><div style="font-size:28px; color:#e04f33">$142.85 (-22.4%)</div></div>
+        </div>
+        <div>
+          <div style="font-size:12px; font-family:'JetBrains Mono'">WACC SHOCK: +175 bps</div>
+          <div class="slider-mock"><div class="slider-fill"></div></div>
+          <div style="font-size:12px; font-family:'JetBrains Mono'">TERMINAL MARGIN: 24.5%</div>
+          <div class="slider-mock"><div class="slider-fill" style="width:45%; background:#25a18e"></div></div>
+        </div>
+        <svg viewBox="0 0 300 90" style="width:100%; height:90px; background:#0e1013; padding:8px">
+          <polyline fill="none" stroke="#25a18e" stroke-width="2.5" points="10,70 70,55 140,40 210,25 290,15"/>
+          <polyline fill="none" stroke="#e04f33" stroke-width="2.5" points="10,70 70,65 140,68 210,52 290,48"/>
+        </svg>
+      </div>
+      <div class="footer-meta"><span>NEXT.JS · DRIZZLE · SEC EDGAR</span><span>LIVE APP ↗</span></div>
+    </section>
+
+    <section class="hold-plate v6">
+      <div class="grade-pill">V6 PROBLEM // LIVE A* GRID</div>
+      <div>
+        <h2 class="plate-title">PokéBastion TD</h2>
+        <p class="plate-sub">Open-map roguelike tower defense. Click cells to place walls and watch dynamic flow-field rerouting across 152 units.</p>
+      </div>
+      <div class="widget-box">
+        <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono'; font-size:12px">
+          <span>28×18 SANDBOX ACTIVE</span><span style="color:#25a18e">PATH LENGTH: 34 STEPS</span>
+        </div>
+        <div class="grid-28">
+          <div class="g-cell g-path"></div><div class="g-cell g-path"></div><div class="g-cell g-wall"></div><div class="g-cell"></div><div class="g-cell"></div><div class="g-cell"></div><div class="g-cell"></div><div class="g-cell"></div><div class="g-cell"></div><div class="g-cell"></div>
+          <div class="g-cell"></div><div class="g-cell g-path"></div><div class="g-cell g-wall"></div><div class="g-cell g-path"></div><div class="g-cell g-path"></div><div class="g-cell g-path"></div><div class="g-cell g-wall"></div><div class="g-cell"></div><div class="g-cell"></div><div class="g-cell"></div>
+          <div class="g-cell"></div><div class="g-cell g-path"></div><div class="g-cell g-path"></div><div class="g-cell g-path"></div><div class="g-cell g-wall"></div><div class="g-cell g-path"></div><div class="g-cell g-wall"></div><div class="g-cell"></div><div class="g-cell"></div><div class="g-cell"></div>
+          <div class="g-cell"></div><div class="g-cell"></div><div class="g-cell"></div><div class="g-cell"></div><div class="g-cell g-wall"></div><div class="g-cell g-path"></div><div class="g-cell g-path"></div><div class="g-cell g-path"></div><div class="g-cell g-path"></div><div class="g-cell g-path"></div>
+        </div>
+        <div style="font-family:'JetBrains Mono'; font-size:12px; color:#b8b5ad">PHASER 3 · HTML5 CANVAS · VITEST · PLAYWRIGHT</div>
+      </div>
+      <div class="footer-meta"><span>CLICK GRID TO BUILD WALLS</span><span>PLAY LIVE ↗</span></div>
+    </section>
+
+    <section class="hold-plate v5">
+      <div class="grade-pill">V5 // 127 TABS & LOG</div>
+      <div>
+        <h2 class="plate-title">Sapling & Off-Hours</h2>
+        <p class="plate-sub">Semantic tab clustering + personal log: Bouldering, Calisthenics, Test Kitchen & C-Drama/K-Drama tier list.</p>
+      </div>
+      <div class="widget-box" style="gap:12px">
+        <div style="background:#1c2026; padding:12px; border-left:3px solid #eab308">
+          <div style="font-size:12px; color:#eab308; font-family:'JetBrains Mono'">SAPLING RAG CLUSTER</div>
+          <div style="font-size:16px; margin-top:4px">127 Browser Tabs → 4 Semantic Graphs</div>
+        </div>
+        <div style="background:#1c2026; padding:12px; border-left:3px solid #e04f33">
+          <div style="font-size:12px; color:#e04f33; font-family:'JetBrains Mono'">TRAINING & KITCHEN</div>
+          <div style="font-size:16px; margin-top:4px">Overhang V6 Project · Weighted Pull-ups · Wok Braised Pork</div>
+        </div>
+        <div style="background:#1c2026; padding:12px; border-left:3px solid #25a18e">
+          <div style="font-size:12px; color:#25a18e; font-family:'JetBrains Mono'">NOW WATCHING</div>
+          <div style="font-size:16px; margin-top:4px">Joy of Life S2 · Moving · Nirvana in Fire</div>
+        </div>
+      </div>
+      <div class="footer-meta"><span>SUPABASE · VERCEL AI SDK</span><span>CLUSTER TABS ⟲</span></div>
+    </section>
+  </main>
+</body>
+</html>

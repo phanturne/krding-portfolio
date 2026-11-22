@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prussian Cyanotype Blueprint — Kevin Ding</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1440px; height: 900px; overflow: hidden;
+    background: #071324; color: #e2f1ff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    background-image:
+      linear-gradient(rgba(56,189,248,0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56,189,248,0.12) 1px, transparent 1px);
+    background-size: 32px 32px;
+    padding: 36px 48px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .blueprint-frame {
+    border: 2px solid #38bdf8; height: 100%; display: grid;
+    grid-template-rows: 110px 1fr 56px; background: rgba(7,19,36,0.9);
+  }
+  .title-block {
+    border-bottom: 2px solid #38bdf8; display: grid;
+    grid-template-columns: 1fr 420px;
+  }
+  .id-cell { padding: 20px 28px; display: flex; flex-direction: column; justify-content: center; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 42px; letter-spacing: -0.02em; color: #fff; }
+  .spec-table {
+    border-left: 2px solid #38bdf8; display: grid; grid-template-columns: 1fr 1fr;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  }
+  .spec-cell { padding: 12px 16px; border-bottom: 1px solid rgba(56,189,248,0.35); border-right: 1px solid rgba(56,189,248,0.35); }
+  .plates-grid { display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
+  .plate { padding: 28px; border-right: 2px solid #38bdf8; display: flex; flex-direction: column; justify-content: space-between; }
+  .plate:last-child { border-right: none; }
+  .mono-tag { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #38bdf8; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-size: 32px; margin: 6px 0; }
+  .viewport-box {
+    background: #040b16; border: 1.5px solid #38bdf8; flex: 1; margin: 16px 0;
+    box-shadow: 6px 6px 0 rgba(56,189,248,0.22); padding: 18px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .tabs { display: flex; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .tab { padding: 4px 10px; border: 1px solid #38bdf8; color: #38bdf8; }
+  .tab.active { background: #38bdf8; color: #071324; font-weight: 600; }
+  .footer-bar {
+    border-top: 2px solid #38bdf8; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #93c5fd;
+  }
+</style>
+</head>
+<body>
+  <div class="blueprint-frame">
+    <header class="title-block">
+      <div class="id-cell">
+        <h1>KEVIN DING // SYSTEMS &amp; ML</h1>
+        <p style="color:#93c5fd; font-size:15px; margin-top:4px">Full-Stack SWE @ Amazon Prime Video · M.S. CS (ML) Georgia Tech · B.S. CS UC Santa Cruz</p>
+      </div>
+      <div class="spec-table">
+        <div class="spec-cell"><div style="color:#93c5fd">DWG NO.</div><div style="font-size:16px; color:#fff">KD-2026-REV2</div></div>
+        <div class="spec-cell"><div style="color:#93c5fd">EQUITIES</div><div style="font-size:16px; color:#38bdf8">521 MODELED</div></div>
+        <div class="spec-cell"><div style="color:#93c5fd">PATH GRID</div><div style="font-size:16px; color:#38bdf8">28×18 A*</div></div>
+        <div class="spec-cell"><div style="color:#93c5fd">GITHUB</div><div style="font-size:16px; color:#fff">@phanturne</div></div>
+      </div>
+    </header>
+    <main class="plates-grid">
+      <section class="plate">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center">
+            <span class="mono-tag">FIG 01 // DETERMINISTIC VALUATION ENGINE</span>
+            <div class="tabs"><span class="tab active">Real App UI (3)</span><span class="tab">DCF Sandbox</span></div>
+          </div>
+          <h2>StressAlpha</h2>
+          <p style="color:#93c5fd; font-size:14px">Equity earnings &amp; scenario stress-testing across 521 stocks with SEC EDGAR XBRL ingestion.</p>
+        </div>
+        <div class="viewport-box">
+          <div class="mono-tag">DUAL-PANE COCKPIT // NVDA SCENARIO TREE ($256.18 IV)</div>
+          <div style="border:1px dashed rgba(56,189,248,0.4); flex:1; margin:12px 0; display:flex; align-items:center; justify-content:center; font-size:22px; color:#38bdf8">
+            [REAL HIGH-RES STRESSALPHA COCKPIT SCREENSHOT]
+          </div>
+          <div style="font-family:'IBM Plex Mono'; font-size:12px; color:#93c5fd">Next.js · React · TypeScript · PostgreSQL · Drizzle ORM</div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-family:'IBM Plex Mono'; font-size:13px">
+          <span>github.com/phanturne/stress-alpha</span><span style="color:#38bdf8; font-weight:600">LIVE APP ↗</span>
+        </div>
+      </section>
+      <section class="plate">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center">
+            <span class="mono-tag">FIG 02 // OPEN-MAP FLOW-FIELD ENGINE</span>
+            <div class="tabs"><span class="tab active">Real Game UI (3)</span><span class="tab">A* Sandbox</span></div>
+          </div>
+          <h2>PokéBastion TD</h2>
+          <p style="color:#93c5fd; font-size:14px">Browser roguelike tower defense across a 28×18 grid with 152 playable units and live wall rerouting.</p>
+        </div>
+        <div class="viewport-box">
+          <div class="mono-tag">PHASER 3 LIVE WAVE COMBAT // 28×18 DYNAMIC MAZE</div>
+          <div style="border:1px dashed rgba(56,189,248,0.4); flex:1; margin:12px 0; display:flex; align-items:center; justify-content:center; font-size:22px; color:#38bdf8">
+            [REAL HIGH-RES POKÉBASTION COMBAT SCREENSHOT]
+          </div>
+          <div style="font-family:'IBM Plex Mono'; font-size:12px; color:#93c5fd">TypeScript · Phaser 3 · Vite · HTML5 Canvas · Vitest · Playwright</div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-family:'IBM Plex Mono'; font-size:13px">
+          <span>github.com/phanturne/pokebastion</span><span style="color:#38bdf8; font-weight:600">PLAY LIVE ↗</span>
+        </div>
+      </section>
+    </main>
+    <footer class="footer-bar">
+      <span>EXPERIENCE: AMAZON PRIME VIDEO · GEORGIA TECH OMSCS (ML) · UC SANTA CRUZ</span>
+      <span>OFF-HOURS: CALISTHENICS · COOKING · READING · C-DRAMAS / K-DRAMAS</span>
+    </footer>
+  </div>
+</body>
+</html>

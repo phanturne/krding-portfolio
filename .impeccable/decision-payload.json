@@ -1,0 +1,249 @@
+{
+  "title": "Choose the visual world for Kevin Ding's Lab Notebook",
+  "question": "The roll assigned Topographic Route & Hold Wall (Candidate #7). Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "kind": "assigned",
+      "label": "Topographic Route & Hold Wall",
+      "kicker": "THE ROLL",
+      "lineage": "Indoor bouldering route-setting boards & Yosemite/Crag topographic guidebooks",
+      "thesis": "Engineering systems graded as climbing problems on a chalk-dusted slate wall connected by vector route lines.",
+      "palette": [
+        "#181a1f",
+        "#f4f1ea",
+        "#e04f33",
+        "#25a18e"
+      ],
+      "materials": [
+        "textured slate plywood",
+        "chalk-dust vector lines"
+      ],
+      "viewport": "Full-viewport route board: Kevin's credentials pinned to the top ledger while SVG route lines link into three live interactive instrument plates (StressAlpha DCF tree, PokéBastion 28x18 pathfinder, Sapling graph).",
+      "risk": "Climbing grades (V4-V8) must immediately map to real systems complexity rather than feeling like an inside joke.",
+      "raised": [
+        {
+          "from": "challenger-clock",
+          "raise": "Adopted deterministic fixed-slot tabular cell masks for all live DCF valuation and A* telemetry counters so numbers swap without layout jitter."
+        },
+        {
+          "from": "challenger-gravity",
+          "raise": "Adopted multi-field force routing so live vector paths dynamically bend around project holds and interactive obstacles."
+        },
+        {
+          "from": "challenger-forge",
+          "raise": "Adopted registered before/after stress-state columns so every slider move shows baseline vs. stressed valuation delta side-by-side."
+        },
+        {
+          "from": "challenger-artpaul",
+          "raise": "Adopted a hidden personal landmark mark tucked into each section and one deliberate spot color per problem plate."
+        }
+      ],
+      "html": ".impeccable/mocks/decision/assigned.html",
+      "comp": ".impeccable/mocks/decision/assigned.webp"
+    },
+    {
+      "id": "model-pick",
+      "kind": "pick",
+      "label": "Dieter Rams / Braun Technical Manual",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "1960s Braun technical manuals & Ulm School instrument specifications",
+      "thesis": "Every software project presented as a precision hardware specimen sheet with live rotary/slider controls.",
+      "palette": [
+        "#f2efe9",
+        "#1a1917",
+        "#d94e1f",
+        "#7c807b"
+      ],
+      "materials": [
+        "matte anodized aluminum",
+        "schematic drafting paper"
+      ],
+      "viewport": "Asymmetric specimen sheet with exposed millimeter rules, hosting live StressAlpha DCF dials and the 28x18 PokéBastion grid inside a recessed instrument bay.",
+      "risk": "Familiar industrial-minimalist territory that many senior engineering portfolios gravitate toward.",
+      "html": ".impeccable/mocks/decision/model-pick.html",
+      "comp": ".impeccable/mocks/decision/model-pick.webp"
+    },
+    {
+      "id": "challenger-rietveld",
+      "kind": "challenger",
+      "catalogId": "design-canon-rietveld-sliding-house",
+      "label": "Rietveld Sliding Planes",
+      "verdict": "competitive",
+      "lineage": "Rietveld Schröder house (1924) — sliding architectural partitions",
+      "thesis": "One continuous architectural room where sliding primary-color joints reconfigure the viewport between live simulations and the off-hours life log.",
+      "palette": [
+        "#f5f5f2",
+        "#121316",
+        "#d62828",
+        "#003049",
+        "#f77f00"
+      ],
+      "materials": [
+        "structural black ink frames",
+        "sliding primary-edge panels"
+      ],
+      "viewport": "A partitioned architectural plane where dragging or clicking the red, blue, and yellow structural edges slides open StressAlpha, PokéBastion, and the Life Log in place.",
+      "case": "Fuses brilliantly with multi-pane interactive simulations where routes are plane positions rather than separate pages.",
+      "risk": "Can feel rigidly architectural if the interactive game and financial widgets don't breathe inside the frames.",
+      "html": ".impeccable/mocks/decision/challenger-rietveld.html",
+      "comp": ".impeccable/mocks/decision/challenger-rietveld.webp",
+      "hero": "https://impeccable.style/worlds/cards/design-canon-rietveld-sliding-house-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/design-canon-rietveld-sliding-house.webp"
+    },
+    {
+      "id": "challenger-hypercard",
+      "kind": "challenger",
+      "catalogId": "medium-native-hypercard-stack-shoebox",
+      "label": "HyperCard Shoebox Stack",
+      "verdict": "competitive",
+      "lineage": "Bill Atkinson's 1987 HyperCard stacks",
+      "thesis": "A tactile black-and-white dithered card stack where every project card is both a readable memo and an editable, playable tool.",
+      "palette": [
+        "#ffffff",
+        "#000000",
+        "#808080"
+      ],
+      "materials": [
+        "1-bit stipple dither",
+        "inverting pixel buttons"
+      ],
+      "viewport": "A fixed-proportion HyperCard stack on a stippled desktop where visitors flip between playable StressAlpha, PokéBastion, and Sapling cards with live tool palettes.",
+      "case": "Honors the 'tool for reading is the tool for making' ethos of a lab notebook.",
+      "risk": "Strict 1-bit monochrome strips out the semantic color cues useful for financial heatmaps and game sprites.",
+      "html": ".impeccable/mocks/decision/challenger-hypercard.html",
+      "comp": ".impeccable/mocks/decision/challenger-hypercard.webp",
+      "hero": "https://impeccable.style/worlds/cards/medium-native-hypercard-stack-shoebox-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/medium-native-hypercard-stack-shoebox.webp"
+    },
+    {
+      "id": "challenger-clock",
+      "kind": "challenger",
+      "catalogId": "signals-instruments-seven-segment-alarm-clock",
+      "label": "Seven-Segment Totem",
+      "verdict": "declined",
+      "lineage": "Eight-cell LED segment masks & scoreboard totems",
+      "thesis": "A rigid near-black mask of lit red, amber, and green segment cells where digits and states ignite in place.",
+      "palette": [
+        "#0a0a0c",
+        "#ff2a2a",
+        "#ffb000",
+        "#00e676"
+      ],
+      "materials": [
+        "unlit ghost segment mask",
+        "phosphor LED glow"
+      ],
+      "viewport": "A dark scoreboard totem quoting $KVIN metrics and project states in giant segment digits.",
+      "case": "Fuses poorly with long-form architectural writing and graph exploration.",
+      "kept": "Fixed-slot tabular cell discipline with ghost unlit states for live telemetry readouts.",
+      "risk": "Eight-cell masks cannot carry rich architectural memos or spatial node graphs cleanly.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-seven-segment-alarm-clock-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/signals-instruments-seven-segment-alarm-clock.webp"
+    },
+    {
+      "id": "challenger-gravity",
+      "kind": "challenger",
+      "catalogId": "dream-surreal-impossible-worlds-gravity-rain-garden",
+      "label": "Gravity-Rain Garden",
+      "verdict": "declined",
+      "lineage": "Multi-directional vector-field rain habitats",
+      "thesis": "A surreal vector-field garden where data drops orbit and fall toward project nodes according to cloud color.",
+      "palette": [
+        "#2b3530",
+        "#4ea8de",
+        "#e63946",
+        "#f1faee"
+      ],
+      "materials": [
+        "dusk garden ground",
+        "curved vector rain trajectories"
+      ],
+      "viewport": "A physics-driven garden canvas where blue and red rain streams bend around Kevin's project habitats.",
+      "case": "Surreal curved baselines sacrifice scanability for hiring managers evaluating systems rigor.",
+      "kept": "Interactive multi-field vector routing where particles dynamically bend around placed obstacles.",
+      "risk": "Tilted baselines undermine technical credibility for a senior systems engineer.",
+      "hero": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-gravity-rain-garden-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-gravity-rain-garden.webp"
+    },
+    {
+      "id": "challenger-forge",
+      "kind": "challenger",
+      "catalogId": "metal-forging-patina-blacksmith-scale-shower",
+      "label": "Blacksmith Scale & Power Hammer",
+      "verdict": "declined",
+      "lineage": "Industrial hot-forging & chalk-marked anvil steel",
+      "thesis": "Forge-dark steel graded from black to white heat where each interaction strikes and lengthens the billet.",
+      "palette": [
+        "#111215",
+        "#3a3d45",
+        "#ff5400",
+        "#ffd000"
+      ],
+      "materials": [
+        "anvil-gray steel",
+        "incandescent heat gradient"
+      ],
+      "viewport": "Full-width industrial rows ruled like a smith's chalk marks showing force numerals and deformed geometry.",
+      "case": "Heavy blacksmith metallurgy feels disconnected from financial modeling, Pokémon TD, and knowledge graphs.",
+      "kept": "Registered before-and-after comparison geometry with chalk-ruled tabular force deltas.",
+      "risk": "Overly aggressive industrial metaphor for software and ML systems.",
+      "hero": "https://impeccable.style/worlds/cards/metal-forging-patina-blacksmith-scale-shower-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/metal-forging-patina-blacksmith-scale-shower.webp"
+    },
+    {
+      "id": "challenger-artpaul",
+      "kind": "challenger",
+      "catalogId": "brand-identity-canon-art-paul-magazine-program",
+      "label": "Mid-Century Editorial Issue",
+      "verdict": "declined",
+      "lineage": "Art Paul's mid-century magazine grid & hidden cover mark",
+      "thesis": "A strict two-column serif magazine issue with one editorial spot color per project and a hidden mark in every view.",
+      "palette": [
+        "#faf8f5",
+        "#111111",
+        "#c83e2b"
+      ],
+      "materials": [
+        "coated magazine stock",
+        "heavy editorial rules"
+      ],
+      "viewport": "A serif masthead over a two-column editorial spread with drop initials and an embedded interactive illustration plate.",
+      "case": "Static magazine columns prioritize long interviews over simultaneous multi-instrument manipulation.",
+      "kept": "Per-section editorial spot color custom property and a hidden signature mark tucked into each view.",
+      "risk": "Reads like an essay archive rather than an interactive engineering lab.",
+      "hero": "https://impeccable.style/worlds/cards/brand-identity-canon-art-paul-magazine-program-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/brand-identity-canon-art-paul-magazine-program.webp"
+    }
+  ],
+  "reroll": {
+    "registers": [
+      "safer",
+      "bolder"
+    ]
+  },
+  "buildPath": {
+    "value": "code",
+    "toggle": true
+  },
+  "canon": true,
+  "canonCard": {
+    "kind": "canon",
+    "label": "The category standard",
+    "thesis": "Clean dark-mode developer portfolio with bento cards and monospace badges, executed at full craft.",
+    "palette": [
+      "#090a0f",
+      "#f8fafc",
+      "#3b82f6"
+    ],
+    "materials": [
+      "hairline bento grid",
+      "crisp UI screenshots"
+    ],
+    "viewport": "Centered developer intro above a three-card bento showcase with live interactive embeds.",
+    "risk": "Indistinguishable from standard Vercel/Linear-inspired developer portfolios by design.",
+    "html": ".impeccable/mocks/decision/canon.html",
+    "comp": ".impeccable/mocks/decision/canon.webp"
+  },
+  "steer": true
+}

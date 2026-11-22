@@ -1,0 +1,37 @@
+[
+  {
+    "id": "seed-1",
+    "author": "Kevin",
+    "message": "Welcome to the midnight sky — click any stars to draw constellations or release a lantern!",
+    "createdAt": "Tonight",
+    "hue": "amber"
+  },
+  {
+    "id": "seed-2",
+    "author": "GT OMSCS Alum",
+    "message": "Go Jackets! Good luck with ML & distributed systems at Prime Video.",
+    "createdAt": "2h ago",
+    "hue": "cyan"
+  },
+  {
+    "id": "seed-3",
+    "author": "Seattle Builder",
+    "message": "StressAlpha's supply-chain DAG and scenario tree are super clean.",
+    "createdAt": "5h ago",
+    "hue": "amber"
+  },
+  {
+    "id": "seed-4",
+    "author": "TD Fan",
+    "message": "Made it to Wave 30 in PokéBastion TD with a Charizard + Gengar maze!",
+    "createdAt": "1d ago",
+    "hue": "rose"
+  },
+  {
+    "id": "seed-5",
+    "author": "Wuxia Watcher",
+    "message": "May all your deployments be zero-downtime and your drama endings satisfying.",
+    "createdAt": "2d ago",
+    "hue": "amber"
+  }
+]

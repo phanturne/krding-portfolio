@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Abyssal Thermocline Telemetry — Kevin Ding</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1440px; height: 900px; overflow: hidden;
+    background: linear-gradient(180deg, #061830 0%, #040d1a 100%);
+    color: #e0f7fa; font-family: 'Familjen Grotesk', sans-serif;
+    display: grid; grid-template-columns: 110px 1fr;
+  }
+  .depth-rail {
+    border-right: 2px solid #00f0ff; background: rgba(4,13,26,0.9);
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 32px 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #00f0ff;
+  }
+  .main-field { padding: 36px 48px; display: flex; flex-direction: column; justify-content: space-between; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid rgba(0,240,255,0.3); padding-bottom: 20px; }
+  h1 { font-size: 48px; line-height: 0.95; }
+  .thermo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; margin: 28px 0; }
+  .dive-station {
+    background: rgba(11,29,54,0.8); border: 1.5px solid #00f0ff; border-radius: 10px;
+    padding: 24px; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .screen { background: #020710; border: 1px solid rgba(0,240,255,0.35); flex: 1; margin: 16px 0; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono'; color: #00f0ff; font-size: 20px; }
+</style>
+</head>
+<body>
+  <aside class="depth-rail">
+    <div>000m // SURFACE</div>
+    <div>-040m // THERMOCLINE</div>
+    <div>-120m // SYSTEMS</div>
+    <div>-240m // STACK</div>
+    <div>-360m // OFF-HOURS</div>
+  </aside>
+  <div class="main-field">
+    <header>
+      <div>
+        <h1>KEVIN DING</h1>
+        <p style="color:#80deea; font-size:17px; margin-top:6px">Full-Stack SWE @ Amazon Prime Video · M.S. CS (ML) Georgia Tech · B.S. CS UCSC</p>
+      </div>
+      <div style="font-family:'JetBrains Mono'; font-size:14px; color:#00f0ff">521 EQUITIES // 152 UNITS</div>
+    </header>
+    <main class="thermo-grid">
+      <section class="dive-station">
+        <div>
+          <div style="font-family:'JetBrains Mono'; font-size:12px; color:#00f0ff">DEPTH -040m // STRESSALPHA</div>
+          <h2 style="font-size:32px; margin-top:4px">Scenario Valuation Cockpit</h2>
+        </div>
+        <div class="screen">[REAL STRESSALPHA UI + DCF SANDBOX]</div>
+        <div style="font-family:'JetBrains Mono'; font-size:12px; color:#80deea">Next.js · TypeScript · PostgreSQL · Drizzle ORM</div>
+      </section>
+      <section class="dive-station">
+        <div>
+          <div style="font-family:'JetBrains Mono'; font-size:12px; color:#00f0ff">DEPTH -080m // POKÉBASTION TD</div>
+          <h2 style="font-size:32px; margin-top:4px">28×18 Roguelike Tower Defense</h2>
+        </div>
+        <div class="screen">[REAL POKÉBASTION UI + A* SANDBOX]</div>
+        <div style="font-family:'JetBrains Mono'; font-size:12px; color:#80deea">TypeScript · Phaser 3 · Vite · HTML5 Canvas</div>
+      </section>
+    </main>
+    <footer style="font-family:'JetBrains Mono'; font-size:13px; color:#80deea; display:flex; justify-content:space-between">
+      <span>AMAZON PRIME VIDEO · GEORGIA TECH · UCSC</span>
+      <span>CALISTHENICS · COOKING · READING · C/K-DRAMAS</span>
+    </footer>
+  </div>
+</body>
+</html>

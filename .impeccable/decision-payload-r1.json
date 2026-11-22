@@ -1,0 +1,246 @@
+{
+  "title": "Choose an Alternate Blue-Toned Visual World (Zero Climbing)",
+  "question": "Re-rolled with zero rock-climbing motifs and a commitment to your blue palette and two flagship projects (StressAlpha & PokéBastion TD).",
+  "options": [
+    {
+      "id": "assigned-cyanotype",
+      "kind": "assigned",
+      "label": "Prussian Cyanotype Engineering Blueprint",
+      "kicker": "THE ROLL",
+      "lineage": "1842 John Herschel Prussian-blue cyanotype architectural & mechanical plates",
+      "thesis": "Deep Prussian-blue architectural blueprint plates with crisp cyan drafting callouts framing StressAlpha and PokéBastion TD as precision 50/50 system schematics.",
+      "palette": [
+        "#071324",
+        "#0e223d",
+        "#38bdf8",
+        "#e2f1ff"
+      ],
+      "materials": [
+        "Prussian cyanotype paper",
+        "drafting caliper leader lines"
+      ],
+      "viewport": "Top architectural title block pinning Kevin Ding's credentials and scale gauges, above two 50/50 cyanotype specimen frames showcasing real StressAlpha & PokéBastion production screenshots with interactive sandbox toggles.",
+      "risk": "Drafting lines must stay crisp and modern rather than feeling like an antique historical document.",
+      "raised": [
+        {
+          "from": "challenger-ascii",
+          "raise": "Adopted strict monospace luminance alignment for all numerical readouts and coordinate scales."
+        },
+        {
+          "from": "challenger-darkroom",
+          "raise": "Adopted stepped exposure test-strip tabs for switching cleanly between real production screenshots and interactive algorithm sandboxes."
+        },
+        {
+          "from": "challenger-orizuru",
+          "raise": "Adopted numbered margin sequence columns (01–04) that trace system architecture from data ingestion to rendering."
+        },
+        {
+          "from": "challenger-riso",
+          "raise": "Adopted dual-layer cyan/cobalt offset framing on active screenshot viewports so selected plates pop with physical depth."
+        }
+      ],
+      "html": ".impeccable/mocks/decision/assigned-cyanotype.html",
+      "comp": ".impeccable/mocks/decision/assigned-cyanotype.webp"
+    },
+    {
+      "id": "pick-cinema",
+      "kind": "pick",
+      "label": "Midnight Cinema & X-Ray Showcase",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Amazon Prime Video X-Ray inspection overlays & Criterion Collection midnight blue screening rooms",
+      "thesis": "A sleek midnight-blue streaming & engineering theater where StressAlpha and PokéBastion TD are presented as flagship releases with an interactive 'X-Ray Architecture' toggle.",
+      "palette": [
+        "#060b14",
+        "#10192b",
+        "#00a8e1",
+        "#f0f6ff"
+      ],
+      "materials": [
+        "midnight theater slate",
+        "X-Ray architectural HUD glass"
+      ],
+      "viewport": "Widescreen midnight-blue theater header above two 50/50 flagship release showcases (StressAlpha & PokéBastion TD) featuring real production screenshots and an 'X-Ray Mode' toggle that reveals the live DCF & A* engine.",
+      "risk": "Familiar dark-mode media-platform grammar, though uniquely personal to a Prime Video engineer.",
+      "html": ".impeccable/mocks/decision/pick-cinema.html",
+      "comp": ".impeccable/mocks/decision/pick-cinema.webp"
+    },
+    {
+      "id": "challenger-deepdive",
+      "kind": "challenger",
+      "catalogId": "rivers-tides-ocean-depths-mesophotic-deep-dive",
+      "label": "Abyssal Thermocline Telemetry",
+      "verdict": "competitive",
+      "lineage": "Mesophotic deep-ocean research submersibles & vertical depth-axis dive computers",
+      "thesis": "An abyssal ink-blue interface ruled by a continuous vertical depth meter (0m → 400m) descending from flagship production apps into backend systems and off-hours logs.",
+      "palette": [
+        "#040d1a",
+        "#0b1d36",
+        "#00f0ff",
+        "#e0f7fa"
+      ],
+      "materials": [
+        "abyssal ink blue gradient",
+        "thermocline cyan depth band"
+      ],
+      "viewport": "A persistent left-hand vertical depth gauge in meters beside a 50/50 thermocline cyan showcase of StressAlpha and PokéBastion TD production captures.",
+      "case": "Natively blue-drenched from surface cyan to abyssal navy, pairing monospace instrument digits with clean grotesk notes.",
+      "risk": "Ocean depth markers (e.g. -120m) must remain subtle wayfinding rather than competing with software engineering facts.",
+      "html": ".impeccable/mocks/decision/challenger-deepdive.html",
+      "comp": ".impeccable/mocks/decision/challenger-deepdive.webp",
+      "hero": "https://impeccable.style/worlds/cards/rivers-tides-ocean-depths-mesophotic-deep-dive-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/rivers-tides-ocean-depths-mesophotic-deep-dive.webp"
+    },
+    {
+      "id": "challenger-mecha",
+      "kind": "challenger",
+      "catalogId": "pop-culture-shelf-anime-command-center",
+      "label": "Cobalt Tactical Command Deck",
+      "verdict": "competitive",
+      "lineage": "90s anime command-center telemetry walls translated into high-contrast cobalt and ice cyan",
+      "thesis": "A high-density tactical command deck with caliper leader lines, hexagonal grid telemetry, and monumental tabular counters framing your two flagship systems.",
+      "palette": [
+        "#050811",
+        "#0f172a",
+        "#38bdf8",
+        "#2dd4bf"
+      ],
+      "materials": [
+        "tactical wireframe HUD",
+        "monumental tabular readouts"
+      ],
+      "viewport": "Command-deck status header with giant tabular counters over two framed tactical bays housing StressAlpha and PokéBastion TD screenshots and live sandboxes.",
+      "case": "Bridges quantitative financial cockpits (StressAlpha) and tactical grid games (PokéBastion TD) into one unified HUD.",
+      "risk": "Must restrain hazard borders so the real app screenshots remain the undisputed focal point.",
+      "html": ".impeccable/mocks/decision/challenger-mecha.html",
+      "comp": ".impeccable/mocks/decision/challenger-mecha.webp",
+      "hero": "https://impeccable.style/worlds/cards/pop-culture-shelf-anime-command-center-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/pop-culture-shelf-anime-command-center.webp"
+    },
+    {
+      "id": "challenger-ascii",
+      "kind": "challenger",
+      "catalogId": "medium-native-ascii-live-scene-render",
+      "label": "Live ASCII Character Matrix",
+      "verdict": "declined",
+      "lineage": "Monospace typewriter glyph-density scene rendering",
+      "thesis": "Single-ink phosphor monospace grid where glyph density renders light and structure.",
+      "palette": [
+        "#050810",
+        "#38bdf8"
+      ],
+      "materials": [
+        "monospace character grid",
+        "glyph luminance ramp"
+      ],
+      "viewport": "A full-screen ASCII character matrix rendering project previews as selectable text.",
+      "case": "ASCII glyph rendering obscures the crisp high-resolution screenshots of StressAlpha and PokéBastion TD.",
+      "kept": "Strict monospace coordinate alignment for telemetry labels.",
+      "risk": "Destroys the visual clarity of real production screenshots.",
+      "hero": "https://impeccable.style/worlds/cards/medium-native-ascii-live-scene-render-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/medium-native-ascii-live-scene-render.webp"
+    },
+    {
+      "id": "challenger-darkroom",
+      "kind": "challenger",
+      "catalogId": "signals-instruments-darkroom-safelight-bay",
+      "label": "Safelight Darkroom Tray",
+      "verdict": "declined",
+      "lineage": "Chemical photographic darkroom under safelight",
+      "thesis": "Stepped exposure test strips emerging in chemical developer trays.",
+      "palette": [
+        "#0c1017",
+        "#64748b",
+        "#e2e8f0"
+      ],
+      "materials": [
+        "enamel tray borders",
+        "stepped exposure strips"
+      ],
+      "viewport": "Sequential darkroom stations developing each project screenshot.",
+      "case": "Analog photography darkroom conflicts with interactive financial modeling and browser game mechanics.",
+      "kept": "Stepped test-strip tab selector for switching between production screenshots and interactive sandboxes.",
+      "risk": "Slow chemical reveal metaphor feels sluggish for a zero-latency systems engineer.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-darkroom-safelight-bay-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/signals-instruments-darkroom-safelight-bay.webp"
+    },
+    {
+      "id": "challenger-orizuru",
+      "kind": "challenger",
+      "catalogId": "paper-folds-pleats-deployable-orizuru-crane-sequence",
+      "label": "Deployable Origami Crease Sequence",
+      "verdict": "declined",
+      "lineage": "32-step uncut paper folding sequence diagrams",
+      "thesis": "A numbered sequence of geometric crease diagrams unfolding across one sheet.",
+      "palette": [
+        "#0d1b2a",
+        "#415a77",
+        "#e0e1dd"
+      ],
+      "materials": [
+        "kozo paper fiber",
+        "mountain and valley crease rules"
+      ],
+      "viewport": "Centered square fold diagrams with numbered margin steps.",
+      "case": "Origami folding metaphors have no connection to Kevin's software engineering or off-hours interests.",
+      "kept": "Clean numbered margin sequence columns for organizing multi-layer tech stacks.",
+      "risk": "Unrelated metaphor.",
+      "hero": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-orizuru-crane-sequence-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-orizuru-crane-sequence.webp"
+    },
+    {
+      "id": "challenger-riso",
+      "kind": "challenger",
+      "catalogId": "posters-covers-sleeves-risograph-zine-cover",
+      "label": "Two-Ink Risograph Zine",
+      "verdict": "declined",
+      "lineage": "Misregistered two-spot-ink duplicator zine covers",
+      "thesis": "Halftone newsprint stock with deliberately misregistered overlapping spot inks.",
+      "palette": [
+        "#f1f5f9",
+        "#2563eb",
+        "#06b6d4"
+      ],
+      "materials": [
+        "halftone open dots",
+        "offset registration layers"
+      ],
+      "viewport": "Offset two-ink zine cover over a two-column project spread.",
+      "case": "Misregistered print grain muddies fine UI screenshots and financial charts.",
+      "kept": "Crisp dual-layer cyan/cobalt offset frame around active screenshot viewports.",
+      "risk": "Halftone distortion hurts readability of dense financial tables.",
+      "hero": "https://impeccable.style/worlds/cards/posters-covers-sleeves-risograph-zine-cover-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/posters-covers-sleeves-risograph-zine-cover.webp"
+    }
+  ],
+  "reroll": {
+    "registers": [
+      "safer",
+      "bolder"
+    ]
+  },
+  "buildPath": {
+    "value": "code",
+    "toggle": true
+  },
+  "canon": true,
+  "canonCard": {
+    "kind": "canon",
+    "label": "Midnight Navy Editorial Bento (Category Standard)",
+    "thesis": "Ultra-clean Vercel/Linear-inspired midnight-blue engineering portfolio with 50/50 flagship cards, zero metaphors, and crisp typography.",
+    "palette": [
+      "#070b14",
+      "#0f172a",
+      "#38bdf8",
+      "#f8fafc"
+    ],
+    "materials": [
+      "subtle 1px navy-steel hairlines",
+      "high-resolution app frames"
+    ],
+    "viewport": "Clean developer header with credentials and social links above a 50/50 split showcase of StressAlpha and PokéBastion TD with real screenshots and sandbox tabs.",
+    "risk": "No overarching metaphor—pure, high-craft modern software portfolio.",
+    "html": ".impeccable/mocks/decision/canon-blue.html",
+    "comp": ".impeccable/mocks/decision/canon-blue.webp"
+  },
+  "steer": true
+}

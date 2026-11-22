@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rietveld Sliding Planes — Kevin Ding</title>
+<link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@600;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1440px; height: 900px; overflow: hidden;
+    background: #f5f5f2; color: #121316;
+    font-family: 'Darker Grotesque', sans-serif;
+    display: grid; grid-template-columns: 380px 1fr 420px;
+    grid-template-rows: 110px 1fr 220px;
+    border: 6px solid #121316;
+  }
+  .plane { border: 4px solid #121316; padding: 28px; position: relative; background: #f5f5f2; }
+  .joint-red { border-right: 14px solid #d62828; }
+  .joint-blue { border-bottom: 14px solid #003049; }
+  .joint-yellow { border-left: 14px solid #f77f00; }
+  h1 { font-size: 54px; font-weight: 900; line-height: 0.9; text-transform: lowercase; }
+  h2 { font-size: 40px; font-weight: 800; line-height: 0.95; text-transform: lowercase; margin-bottom: 12px; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .bar { height: 22px; background: #121316; margin: 14px 0; position: relative; }
+  .bar-red { width: 65%; height: 100%; background: #d62828; }
+  .grid-box { display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; height: 180px; margin-top: 14px; }
+  .cell { border: 2px solid #121316; background: #ffffff; }
+  .cell.w { background: #121316; }
+  .cell.p { background: #f77f00; }
+</style>
+</head>
+<body>
+  <div class="plane joint-red" style="grid-row: 1 / 4; display:flex; flex-direction:column; justify-content:space-between">
+    <div>
+      <div class="mono">PLANE 01 // IDENTITY</div>
+      <h1 style="margin-top:12px">kevin ding</h1>
+      <p style="font-size:22px; margin-top:14px; line-height:1.15">full-stack swe @ amazon prime video · m.s. cs (ml) georgia tech</p>
+    </div>
+    <div style="background:#e8e8e3; padding:18px; border:3px solid #121316">
+      <div class="mono">SLIDE JOINT TO RECONFIGURE</div>
+      <p style="font-size:20px; margin-top:6px">bouldering · calisthenics · cooking · c-dramas</p>
+    </div>
+    <div class="mono">github.com/phanturne</div>
+  </div>
+
+  <div class="plane joint-blue" style="grid-column: 2 / 4; display:flex; justify-content:space-between; align-items:center">
+    <h2>interactive systems notebook — click any primary joint to slide partition</h2>
+    <div class="mono" style="background:#003049; color:#fff; padding:10px 18px">521 EQUITIES // 152 UNITS // 127 TABS</div>
+  </div>
+
+  <div class="plane" style="grid-column: 2 / 3; grid-row: 2 / 4; display:flex; flex-direction:column; justify-content:space-between">
+    <div>
+      <div class="mono" style="color:#d62828">PLANE 02 // STRESSALPHA DCF COCKPIT</div>
+      <h2>deterministic scenario stress tree</h2>
+      <div class="mono" style="font-size:32px; margin-top:12px">$164.20 → $138.90 (-15.4%)</div>
+      <div class="bar"><div class="bar-red"></div></div>
+    </div>
+    <svg viewBox="0 0 400 180" style="width:100%; height:220px; border:3px solid #121316; background:#fff">
+      <line x1="40" y1="90" x2="180" y2="40" stroke="#121316" stroke-width="4"/>
+      <line x1="40" y1="90" x2="180" y2="140" stroke="#d62828" stroke-width="4"/>
+      <rect x="180" y="20" width="180" height="40" fill="#003049"/>
+      <rect x="180" y="120" width="180" height="40" fill="#d62828"/>
+    </svg>
+    <div class="mono">NEXT.JS · TYPESCRIPT · POSTGRESQL · DRIZZLE</div>
+  </div>
+
+  <div class="plane joint-yellow" style="grid-column: 3 / 4; grid-row: 2 / 3">
+    <div class="mono" style="color:#f77f00">PLANE 03 // POKÉBASTION 28×18</div>
+    <h2>live a* flow-field</h2>
+    <div class="grid-box">
+      <div class="cell p"></div><div class="cell p"></div><div class="cell w"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+      <div class="cell"></div><div class="cell p"></div><div class="cell w"></div><div class="cell p"></div><div class="cell p"></div><div class="cell p"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+      <div class="cell"></div><div class="cell p"></div><div class="cell p"></div><div class="cell p"></div><div class="cell w"></div><div class="cell p"></div><div class="cell p"></div><div class="cell p"></div><div class="cell p"></div>
+    </div>
+  </div>
+
+  <div class="plane" style="grid-column: 3 / 4; grid-row: 3 / 4; background:#121316; color:#f5f5f2">
+    <div class="mono" style="color:#f77f00">PLANE 04 // SAPLING 127 TABS</div>
+    <h2 style="color:#f5f5f2">knowledge graph</h2>
+    <p style="font-size:20px">Cluster chaotic tabs into semantic nodes.</p>
+  </div>
+</body>
+</html>

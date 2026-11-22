@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HyperCard Shoebox Stack — Kevin Ding</title>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1440px; height: 900px; overflow: hidden;
+    background-color: #ffffff;
+    background-image: radial-gradient(#000 1px, transparent 0);
+    background-size: 4px 4px;
+    font-family: 'IBM Plex Mono', monospace; color: #000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .menubar {
+    position: absolute; top: 0; left: 0; right: 0; height: 36px;
+    background: #fff; border-bottom: 3px solid #000;
+    display: flex; align-items: center; padding: 0 24px; gap: 28px;
+    font-family: 'Silkscreen', monospace; font-size: 15px;
+  }
+  .stack-window {
+    width: 1260px; height: 760px; background: #fff;
+    border: 4px solid #000; box-shadow: 12px 12px 0 #000;
+    display: grid; grid-template-rows: 44px 1fr 64px;
+  }
+  .titlebar {
+    border-bottom: 3px solid #000; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px; font-family: 'Silkscreen', monospace; font-size: 16px;
+    background: repeating-linear-gradient(0deg, #000, #000 2px, #fff 2px, #fff 4px);
+  }
+  .title-pill { background: #fff; padding: 2px 16px; border: 2px solid #000; }
+  .card-canvas {
+    display: grid; grid-template-columns: 280px 1fr 1fr;
+    height: 100%;
+  }
+  .pane { border-right: 3px solid #000; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+  .pane:last-child { border-right: none; }
+  h2 { font-family: 'Silkscreen', monospace; font-size: 24px; margin-bottom: 10px; }
+  .btn {
+    border: 3px solid #000; padding: 10px 14px; font-family: 'Silkscreen', monospace;
+    font-size: 14px; background: #fff; text-align: center; box-shadow: 4px 4px 0 #000;
+  }
+  .btn.active { background: #000; color: #fff; }
+  .dither-box {
+    border: 3px solid #000; padding: 16px; flex: 1; margin: 16px 0;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+  <div class="menubar">
+    <span> HyperCard</span><span>File</span><span>Edit</span><span>Go</span><span>Tools</span><span>Stacks: Kevin Ding (SWE @ Prime Video · GT OMSCS)</span>
+  </div>
+  <div class="stack-window">
+    <div class="titlebar">
+      <span class="title-pill">STACK: KEVIN_DING_LAB_NOTEBOOK.STK (CARD 1 OF 4)</span>
+      <span class="title-pill">BROWSE & AUTHOR MODE</span>
+    </div>
+    <div class="card-canvas">
+      <div class="pane">
+        <div>
+          <h2>TOOL PALETTE</h2>
+          <p style="font-size:14px; line-height:1.4">Click any button or slider to mutate live card state.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px">
+          <div class="btn active">01: STRESSALPHA DCF</div>
+          <div class="btn">02: POKEBASTION A*</div>
+          <div class="btn">03: SAPLING 127 TABS</div>
+          <div class="btn">04: BOULDERING & DRAMAS</div>
+        </div>
+        <div style="font-size:12px">GITHUB.COM/PHANTURNE</div>
+      </div>
+
+      <div class="pane">
+        <div>
+          <h2>STRESSALPHA (521 EQUITIES)</h2>
+          <p style="font-size:14px">Deterministic DCF scenario stress simulator.</p>
+        </div>
+        <div class="dither-box">
+          <div style="font-size:28px; font-weight:700">IV: $156.40 (-14.2%)</div>
+          <div style="border:2px solid #000; height:24px; background:#fff">
+            <div style="width:60%; height:100%; background:#000"></div>
+          </div>
+          <div style="font-size:13px">WACC: 9.5% | TERMINAL GROWTH: 3.0%</div>
+        </div>
+        <div class="btn">LAUNCH STRESSALPHA.VERCEL.APP ↗</div>
+      </div>
+
+      <div class="pane">
+        <div>
+          <h2>POKEBASTION (28x18 GRID)</h2>
+          <p style="font-size:14px">Paint walls with the cursor tool to reroute creeps.</p>
+        </div>
+        <div class="dither-box" style="background-image: radial-gradient(#000 1.5px, transparent 0); background-size: 16px 16px;">
+          <div style="background:#fff; border:2px solid #000; padding:8px; font-size:13px">A* PATH: 32 NODES // 152 UNITS</div>
+          <div style="background:#000; color:#fff; padding:8px; font-size:13px">WALLS PLACED: 14 BLOCKS</div>
+        </div>
+        <div class="btn">PLAY POKEBASTION LIVE ↗</div>
+      </div>
+    </div>
+    <div style="border-top:3px solid #000; display:flex; align-items:center; justify-content:space-between; padding:0 24px; font-family:'Silkscreen'; font-size:13px">
+      <span>◀ PREV CARD</span><span>HOME STACK // BOULDERING V6 · CALISTHENICS · COOKING · C-DRAMAS</span><span>NEXT CARD ▶</span>
+    </div>
+  </div>
+</body>
+</html>
