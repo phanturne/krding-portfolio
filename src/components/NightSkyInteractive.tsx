@@ -963,62 +963,36 @@ export function NightSkyInteractive({
       // Lanterns launch well above the water surface (waterY - 28) when the lake is in view, or near the bottom of the screen when at the top of the page
       const curBottomLimit = Math.min(height - 16, waterY - 28);
 
-      // 1. Deep Nocturnal Twilight Sky Gradient (cosmic zenith -> sapphire mid-sky -> soft horizon airglow)
-      const skyGrad = ctx.createLinearGradient(0, 0, 0, waterY);
-      skyGrad.addColorStop(0, "rgba(4, 7, 16, 0.35)");
-      skyGrad.addColorStop(0.55, "rgba(11, 23, 48, 0.25)");
-      skyGrad.addColorStop(0.86, "rgba(18, 38, 72, 0.42)");
-      skyGrad.addColorStop(1, "rgba(22, 46, 84, 0.48)");
-      ctx.fillStyle = skyGrad;
-      ctx.fillRect(0, 0, width, waterY);
-
-      // 1B. Soft Translucent Nocturnal Nebula / Aurora Silk Veil (zero hard edges, zero particle clutter)
-      const driftA = Math.sin(tick * 0.08) * (width * 0.05);
-      const driftB = Math.cos(tick * 0.06) * (height * 0.03);
-      const auroraIndigo = ctx.createRadialGradient(
-        width * 0.28 + driftA,
-        height * 0.26 + driftB,
-        20,
-        width * 0.28 + driftA,
-        height * 0.26 + driftB,
-        Math.max(width, height) * 0.52
+      // 1. Velvet Midnight Sky Wash & Top-Corner Yozakura (Cherry Blossom Canopy) Glow
+      const moonBeam = ctx.createRadialGradient(
+        width * 0.82,
+        height * 0.08,
+        10,
+        width * 0.75,
+        height * 0.25,
+        Math.max(width, height) * 0.55
       );
-      auroraIndigo.addColorStop(0, "rgba(56, 189, 248, 0.075)");
-      auroraIndigo.addColorStop(0.45, "rgba(99, 102, 241, 0.05)");
-      auroraIndigo.addColorStop(1, "rgba(6, 11, 20, 0)");
-      ctx.fillStyle = auroraIndigo;
-      ctx.fillRect(0, 0, width, waterY);
+      moonBeam.addColorStop(0, "rgba(251, 191, 36, 0.055)");
+      moonBeam.addColorStop(0.45, "rgba(16, 35, 71, 0.045)");
+      moonBeam.addColorStop(1, "rgba(6, 11, 20, 0)");
+      ctx.fillStyle = moonBeam;
+      ctx.fillRect(0, 0, width, height);
 
-      const auroraWarm = ctx.createRadialGradient(
-        width * 0.76 - driftA,
-        height * 0.22 - driftB,
-        20,
-        width * 0.76 - driftA,
-        height * 0.22 - driftB,
-        Math.max(width, height) * 0.48
-      );
-      auroraWarm.addColorStop(0, "rgba(244, 114, 182, 0.06)");
-      auroraWarm.addColorStop(0.45, "rgba(251, 191, 36, 0.035)");
-      auroraWarm.addColorStop(1, "rgba(6, 11, 20, 0)");
-      ctx.fillStyle = auroraWarm;
-      ctx.fillRect(0, 0, width, waterY);
-
-      // 1C. Distant Valley / Mountain Ridge Silhouette along the Horizon (grounds where lanterns rise from)
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(0, waterY);
-      ctx.quadraticCurveTo(width * 0.14, waterY - 26, width * 0.3, waterY - 12);
-      ctx.quadraticCurveTo(width * 0.48, waterY - 3, width * 0.66, waterY - 18);
-      ctx.quadraticCurveTo(width * 0.84, waterY - 32, width, waterY - 10);
-      ctx.lineTo(width, waterY + 4);
-      ctx.lineTo(0, waterY + 4);
-      ctx.closePath();
-      const ridgeGrad = ctx.createLinearGradient(0, waterY - 32, 0, waterY + 4);
-      ridgeGrad.addColorStop(0, "rgba(6, 12, 24, 0.55)");
-      ridgeGrad.addColorStop(1, "rgba(5, 11, 22, 0.82)");
-      ctx.fillStyle = ridgeGrad;
-      ctx.fill();
-      ctx.restore();
+      for (const canopyX of [width * 0.06, width * 0.94]) {
+        const canopyGlow = ctx.createRadialGradient(
+          canopyX,
+          -10,
+          10,
+          canopyX,
+          40,
+          Math.min(width, height) * 0.36
+        );
+        canopyGlow.addColorStop(0, "rgba(244, 114, 182, 0.07)");
+        canopyGlow.addColorStop(0.55, "rgba(251, 113, 133, 0.025)");
+        canopyGlow.addColorStop(1, "rgba(6, 11, 20, 0)");
+        ctx.fillStyle = canopyGlow;
+        ctx.fillRect(0, 0, width, height * 0.45);
+      }
 
       // Step floating water petals on the lake surface
       if (stepPhysics && !prefersReducedMotion) {
@@ -1149,27 +1123,6 @@ export function NightSkyInteractive({
           }
         }
         ctx.globalAlpha = 1;
-
-        // Soft ambient atmospheric scatter around each lantern so they illuminate the night sky
-        if (fadeAlpha > 0.05) {
-          const haloRadius = 86 * l.scale;
-          const haloGrad = ctx.createRadialGradient(
-            l.x,
-            l.y,
-            4 * l.scale,
-            l.x,
-            l.y,
-            haloRadius
-          );
-          haloGrad.addColorStop(0, pal.outerGlow);
-          haloGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
-          ctx.globalAlpha = fadeAlpha * 0.22;
-          ctx.fillStyle = haloGrad;
-          ctx.beginPath();
-          ctx.arc(l.x, l.y, haloRadius, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        }
 
         drawVolumetricLantern(
           ctx,
