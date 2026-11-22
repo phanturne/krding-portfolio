@@ -1101,11 +1101,16 @@ export function NightSkyInteractive({
       // 2A. Far-Plane Falling Sakura Petals
       stepAndDrawFallingPetals("far");
 
-      // 2B. Step & Render 22 Uniformly Spaced Volumetric Kongming Lanterns (cycling through 32 quotes)
+      // 2B. Step & Render Width-Proportional Kongming Lanterns (~1 per 128px, up to 22 on 2800px)
+      const visibleLanternCount = Math.max(
+        4,
+        Math.min(lanternsRef.current.length, Math.round(width / 128))
+      );
+      const visibleLanterns = lanternsRef.current.slice(0, visibleLanternCount);
       let foundHover: { item: LanternQuote; x: number; y: number } | null =
         null;
 
-      for (const l of lanternsRef.current) {
+      for (const l of visibleLanterns) {
         const distToMouse = mouseRef.current.active
           ? Math.hypot(l.x - mx, l.y - my)
           : 9999;
@@ -1180,7 +1185,7 @@ export function NightSkyInteractive({
         waterY,
         lakeH,
         tick,
-        lanternsRef.current,
+        visibleLanterns,
         floatingPetalsRef.current
       );
 
@@ -1290,7 +1295,7 @@ export function NightSkyInteractive({
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none z-0 opacity-65"
+      className="fixed inset-0 pointer-events-none z-0 opacity-35 sm:opacity-50 lg:opacity-65"
     />
   );
 }
