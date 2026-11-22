@@ -268,13 +268,13 @@ export function PmdSpriteCompanion() {
       }}
       title="Click to interact with Eevee (Sprite: PMDCollab / Chunsoft)"
       aria-label={`Interactive Eevee pixel sprite (${spec.label}). Click to interact.`}
-      className="absolute -bottom-3 -translate-x-1/2 min-w-[44px] min-h-[44px] flex items-end justify-center cursor-pointer group focus-visible:outline-primeCyan z-20"
+      className="absolute -bottom-9 -translate-x-1/2 min-w-[44px] min-h-[44px] flex items-end justify-center cursor-pointer group focus-visible:outline-accent z-20"
     >
       {/* Sleep Zzz Bubble */}
       {renderState.mode === "Sleep" && (
         <span
           aria-hidden="true"
-          className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cardNavy/95 border border-skyLight/40 text-skyLight font-mono font-bold text-xs px-1.5 py-0.5 rounded-[4px] shadow-md whitespace-nowrap xray-bay-transition"
+          className="absolute -top-3 left-1/2 -translate-x-1/2 bg-surface/95 border border-rule text-accent font-mono font-bold text-xs px-1.5 py-0.5 rounded-[4px] whitespace-nowrap bay-transition"
         >
           Zzz...
         </span>

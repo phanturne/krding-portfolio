@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Kevin Ding — Software Engineer",
   description:
-    "Software Engineer @ Amazon · M.S. CS (Machine Learning) @ Georgia Tech. Creator of StressAlpha and PokéBastion TD.",
+    "Software Engineer at Amazon Prime Video · M.S. CS (Machine Learning) at Georgia Tech. Creator of StressAlpha and PokéBastion TD.",
 };
 
 export default function RootLayout({
@@ -22,11 +22,11 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="bg-theaterBg text-iceWhite font-sans antialiased selection:bg-primeCyan selection:text-theaterBg">
+      <body className="bg-ground text-ink font-sans antialiased selection:bg-accent selection:text-ground">
         {children}
       </body>
     </html>

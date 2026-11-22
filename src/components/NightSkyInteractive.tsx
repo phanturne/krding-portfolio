@@ -628,15 +628,33 @@ function drawMidnightLakeAndReflections(
   if (waterY >= height + 24) return;
   const waterDepth = lakeHeight;
 
-  // 1. Atmospheric Nocturnal Lake Gradient with a crisp-yet-soft 20px shoreline transition
-  const featherTop = waterY - 20;
+  // 1. Atmospheric Nocturnal Lake Gradient with a soft misty shoreline transition
+  const featherTop = waterY - 48;
   const lakeGrad = ctx.createLinearGradient(0, featherTop, 0, waterY + waterDepth);
-  lakeGrad.addColorStop(0, "rgba(7, 11, 20, 0)");
-  lakeGrad.addColorStop(0.18, "rgba(12, 28, 52, 0.68)");
-  lakeGrad.addColorStop(0.55, "rgba(9, 21, 40, 0.84)");
-  lakeGrad.addColorStop(1, "rgba(4, 10, 22, 0.96)");
+  lakeGrad.addColorStop(0, "rgba(9, 11, 15, 0)");
+  lakeGrad.addColorStop(0.28, "rgba(18, 32, 50, 0.34)");
+  lakeGrad.addColorStop(0.54, "rgba(21, 38, 60, 0.68)");
+  lakeGrad.addColorStop(0.78, "rgba(14, 25, 42, 0.88)");
+  lakeGrad.addColorStop(1, "rgba(8, 14, 24, 0.96)");
   ctx.fillStyle = lakeGrad;
   ctx.fillRect(0, featherTop, width, height - featherTop);
+
+  // Subtle ambient moonlight ripples across the lake surface
+  ctx.save();
+  for (let i = 0; i < 14; i++) {
+    const depthRatio = ((i + 0.5) / 14);
+    const ry = waterY + 12 + depthRatio * (waterDepth * 0.78);
+    if (ry > height + 8) continue;
+    const baseRx = ((i * 0.37 + 0.13) % 1) * width;
+    const rx = baseRx + Math.sin(tick * 0.45 + i * 1.7) * 18;
+    const rw = (36 + (i % 4) * 24) * (0.65 + depthRatio * 0.7);
+    const alpha = (0.045 + Math.sin(tick * 0.9 + i * 2.1) * 0.02) * (1 - depthRatio * 0.45);
+    ctx.fillStyle = `rgba(186, 214, 244, ${alpha.toFixed(3)})`;
+    ctx.beginPath();
+    ctx.ellipse(rx, ry, rw, 1.1, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
 
   // 2. Cohesive Single-Lantern Water Reflections (1 lantern above = 1 soft mirrored reflection on the water)
   for (const l of lanterns) {
@@ -737,19 +755,12 @@ export function NightSkyInteractive({
     active: false,
   });
 
-  const [hoveredLantern, setHoveredLantern] = useState<{
-    item: LanternQuote;
-    x: number;
-    y: number;
-  } | null>(null);
-
   const lanternsRef = useRef<ActiveLantern[]>([]);
   const fallingPetalsRef = useRef<SakuraPetal[]>([]);
   const floatingPetalsRef = useRef<SakuraPetal[]>([]);
 
   useEffect(() => {
     if (!skyEnabled) {
-      setHoveredLantern(null);
       return;
     }
     const canvas = canvasRef.current;
@@ -1156,7 +1167,6 @@ export function NightSkyInteractive({
       const nextHoverId = foundHover?.item.id ?? null;
       if (nextHoverId !== lastHoverId) {
         lastHoverId = nextHoverId;
-        setHoveredLantern(foundHover);
       }
     };
 
@@ -1211,7 +1221,6 @@ export function NightSkyInteractive({
     const handleMouseLeave = () => {
       mouseRef.current.active = false;
       lastHoverId = null;
-      setHoveredLantern(null);
     };
 
     const renderLoop = () => {
@@ -1248,60 +1257,16 @@ export function NightSkyInteractive({
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      setHoveredLantern(null);
     };
   }, [skyEnabled]);
 
   if (!skyEnabled) return null;
 
-  const activePal = hoveredLantern
-    ? HUE_PALETTES[hoveredLantern.item.hue] || HUE_PALETTES.amber
-    : HUE_PALETTES.amber;
-  const winW = typeof window !== "undefined" ? window.innerWidth : 1440;
-  const winH = typeof window !== "undefined" ? window.innerHeight : 900;
-  const showLeft = hoveredLantern ? hoveredLantern.x > winW * 0.65 : false;
-  const tooltipLeft = hoveredLantern
-    ? Math.max(
-        12,
-        Math.min(
-          showLeft ? hoveredLantern.x - 298 : hoveredLantern.x + 28,
-          winW - 300
-        )
-      )
-    : 12;
-
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        aria-hidden="true"
-        className="fixed inset-0 pointer-events-none z-0"
-      />
-
-      {/* Glass Quote Card when hovering over any drifting Wishing Lantern */}
-      {hoveredLantern && (
-        <div
-          aria-hidden="true"
-          style={{
-            left: tooltipLeft,
-            top: Math.max(24, Math.min(hoveredLantern.y - 36, winH - 130)),
-          }}
-          className="fixed z-30 w-72 bg-cardNavy/95 backdrop-blur-md border border-[#fbbf24]/50 rounded-[10px] p-3.5 theater-elevation pointer-events-none"
-        >
-          <div className="flex items-center justify-between gap-2 font-mono text-xs border-b border-borderNavy pb-1.5 mb-2">
-            <span className={`font-bold ${activePal.badgeClass}`}>
-              {hoveredLantern.item.theme}
-            </span>
-            <span className="text-slateMuted">Wishing Lantern</span>
-          </div>
-          <p className="font-sans text-xs text-iceWhite leading-relaxed">
-            &ldquo;{hoveredLantern.item.quote}&rdquo;
-          </p>
-          <p className="font-mono text-xs text-slateMuted mt-2">
-            — {hoveredLantern.item.attribution}
-          </p>
-        </div>
-      )}
-    </>
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className="fixed inset-0 pointer-events-none z-0 opacity-65"
+    />
   );
 }
