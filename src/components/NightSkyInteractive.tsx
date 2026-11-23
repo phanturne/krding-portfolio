@@ -250,6 +250,7 @@ interface ActiveLantern {
   y: number;
   baseX: number;
   scale: number;
+  speedFactor: number;
   swayAmp: number;
   swayFreq: number;
   phase: number;
@@ -814,8 +815,7 @@ export function NightSkyInteractive({
       0.04, 0.96, 0.31, 0.69, 0.155, 0.845, 0.40, 0.605, 0.27, 0.955,
     ];
     const WIDE_SKY_LANES = [
-      0.035, 0.965, 0.085, 0.915, 0.14, 0.86, 0.19, 0.81, 0.06, 0.94, 0.115,
-      0.885, 0.46, 0.165, 0.835, 0.22, 0.78, 0.61, 0.045, 0.955, 0.25, 0.75,
+      0.04, 0.96, 0.10, 0.90, 0.16, 0.84, 0.22, 0.78, 0.38, 0.62, 0.28, 0.72,
     ];
     const getLaneX = (idx: number, w: number) => {
       const lanes = w >= 1024 ? WIDE_SKY_LANES : SKY_LANES;
@@ -835,22 +835,56 @@ export function NightSkyInteractive({
     const initialBottomLimit = height - initialLakeH - 26;
     const totalSpan = initialBottomLimit - topLimit;
 
+    const initialVisibleCount = Math.max(
+      2,
+      Math.min(ACTIVE_LANTERN_COUNT, Math.round(width / 220))
+    );
+    const initialInSkyCount = Math.max(1, Math.ceil(initialVisibleCount * 0.6));
+    const shuffledSlots = Array.from(
+      { length: initialInSkyCount },
+      (_, i) => i
+    );
+    for (let i = shuffledSlots.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledSlots[i], shuffledSlots[j]] = [
+        shuffledSlots[j],
+        shuffledSlots[i],
+      ];
+    }
+
     lanternsRef.current = Array.from(
       { length: ACTIVE_LANTERN_COUNT },
       (_, idx) => {
         const item =
           INSPIRATIONAL_LANTERNS[idx % INSPIRATIONAL_LANTERNS.length];
         const lx = getLaneX(idx, width);
-        const depthScale =
-          idx % 3 === 0 ? 1.14 : idx % 3 === 1 ? 0.98 : 0.88;
-        const slotY =
-          topLimit + ((idx + 0.5) / ACTIVE_LANTERN_COUNT) * totalSpan;
+        const depthScale = idx % 2 === 0 ? 1.14 : 0.98;
+        let slotY: number;
+        if (idx < initialInSkyCount) {
+          const baseNorm = (shuffledSlots[idx] + 0.5) / initialInSkyCount;
+          const jitter = (Math.random() - 0.5) * 0.08;
+          slotY =
+            topLimit +
+            Math.max(0.06, Math.min(0.86, baseNorm + jitter)) * totalSpan;
+        } else if (idx < initialVisibleCount) {
+          // Stagger remaining visible lanterns just below the shoreline so they enter smoothly
+          const queueIdx = idx - initialInSkyCount;
+          const queueTotal = Math.max(1, initialVisibleCount - initialInSkyCount);
+          slotY =
+            initialBottomLimit +
+            20 +
+            ((queueIdx + Math.random() * 0.6) / queueTotal) * 140;
+        } else {
+          const baseNorm = (idx * 0.61803398875 + 0.13) % 1;
+          slotY = topLimit + baseNorm * totalSpan;
+        }
         return {
           item,
           baseX: lx,
           x: lx,
           y: slotY,
           scale: depthScale,
+          speedFactor: 0.85 + Math.random() * 0.3,
           swayAmp: 6 + (idx % 3) * 2.5,
           swayFreq: 0.22 + (idx % 4) * 0.05,
           phase: idx * 1.7,
@@ -989,6 +1023,8 @@ export function NightSkyInteractive({
     let tick = 0;
     let lastFrameTime = performance.now();
     let lastHoverId: string | null = null;
+    const laneLastSpawnMs = new Map<number, number>();
+    const LANE_COOLDOWN_MS = 10_000;
     const prefersReducedMotion =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -1120,7 +1156,8 @@ export function NightSkyInteractive({
       let foundHover: { item: LanternQuote; x: number; y: number } | null =
         null;
 
-      for (const l of visibleLanterns) {
+      for (let i = 0; i < visibleLanterns.length; i++) {
+        const l = visibleLanterns[i];
         const distToMouse = mouseRef.current.active
           ? Math.hypot(l.x - mx, l.y - my)
           : 9999;
@@ -1128,10 +1165,51 @@ export function NightSkyInteractive({
 
         if (!isHovered && stepPhysics && !prefersReducedMotion) {
           const harmonicBreath = Math.cos(tick * 0.6 + l.phase) * 0.02;
-          l.y -= (UNIFORM_LANTERN_SPEED + harmonicBreath) * dtScale;
+          l.y -= (UNIFORM_LANTERN_SPEED * l.speedFactor + harmonicBreath) * dtScale;
           l.x = l.baseX + Math.sin(tick * l.swayFreq + l.phase) * l.swayAmp;
           if (l.y < topLimit) {
-            l.y = curBottomLimit;
+            const nowMs = performance.now();
+            const laneCount =
+              width >= 1024 ? WIDE_SKY_LANES.length : SKY_LANES.length;
+            let bestLaneIdx = i % laneCount;
+            let bestX = getLaneX(bestLaneIdx, width);
+            let bestY = curBottomLimit + 20 + Math.random() * 80;
+            let bestScore = -Infinity;
+
+            for (let attempt = 0; attempt < 10; attempt++) {
+              const candLaneIdx =
+                (attempt === 0
+                  ? i
+                  : Math.floor(Math.random() * visibleLanterns.length)) %
+                laneCount;
+              const lastSpawn = laneLastSpawnMs.get(candLaneIdx) ?? -Infinity;
+              const onCooldown = nowMs - lastSpawn < LANE_COOLDOWN_MS;
+              const candX = Math.max(
+                32,
+                Math.min(width - 32, getLaneX(candLaneIdx, width))
+              );
+              const candY = curBottomLimit + 18 + Math.random() * 110;
+              let minDist = Infinity;
+              for (let j = 0; j < visibleLanterns.length; j++) {
+                if (j === i) continue;
+                const other = visibleLanterns[j];
+                const d = Math.hypot(other.baseX - candX, other.y - candY);
+                if (d < minDist) minDist = d;
+              }
+              const score = onCooldown ? minDist - 1000 : minDist;
+              if (score > bestScore) {
+                bestScore = score;
+                bestLaneIdx = candLaneIdx;
+                bestX = candX;
+                bestY = candY;
+              }
+              if (!onCooldown && minDist >= 120) break;
+            }
+
+            laneLastSpawnMs.set(bestLaneIdx, nowMs);
+            l.baseX = bestX;
+            l.y = bestY;
+            l.speedFactor = 0.85 + Math.random() * 0.3;
             l.item =
               INSPIRATIONAL_LANTERNS[
                 quoteQueueCursor % INSPIRATIONAL_LANTERNS.length
