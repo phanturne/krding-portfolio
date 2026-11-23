@@ -521,7 +521,7 @@ function drawVolumetricLantern(
   // 2. Translucent Rice-Paper Vertical Gradient + Subtle Edge Aura
   ctx.save();
   ctx.shadowColor = pal.outerGlow;
-  ctx.shadowBlur = (isHovered ? 8 : 4.5) * s * flicker;
+  ctx.shadowBlur = (isHovered ? 12 : 8) * s * flicker;
   ctx.shadowOffsetY = 1 * s;
   const bodyGrad = ctx.createLinearGradient(0, hTop, 0, hBase);
   bodyGrad.addColorStop(0, pal.canopyTop);
