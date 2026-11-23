@@ -984,7 +984,7 @@ export function NightSkyInteractive({
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    const UNIFORM_LANTERN_SPEED = 0.15;
+    const UNIFORM_LANTERN_SPEED = 0.24;
 
     const paintScene = (stepPhysics: boolean, dtScale = 1) => {
       if (stepPhysics && !prefersReducedMotion) {
