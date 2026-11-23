@@ -295,37 +295,37 @@ const HUE_PALETTES: Record<
   }
 > = {
   amber: {
-    outerGlow: "rgba(245, 158, 11, 0.36)",
-    canopyTop: "rgba(124, 45, 18, 0.93)",
-    canopyMid: "rgba(234, 88, 12, 0.93)",
-    canopyBot: "rgba(254, 240, 138, 0.97)",
-    rimStroke: "#fbbf24",
+    outerGlow: "rgba(251, 146, 60, 0.36)",
+    canopyTop: "rgba(180, 74, 24, 0.92)",
+    canopyMid: "rgba(249, 130, 42, 0.94)",
+    canopyBot: "rgba(255, 224, 166, 0.98)",
+    rimStroke: "#fdba74",
     flameCore: "#ffffff",
-    flameMid: "#fde047",
+    flameMid: "#fde68a",
     emberColor: "#fbbf24",
-    badgeClass: "text-[#fde047]",
+    badgeClass: "text-[#fde68a]",
   },
   gold: {
-    outerGlow: "rgba(251, 191, 36, 0.36)",
-    canopyTop: "rgba(146, 64, 14, 0.93)",
-    canopyMid: "rgba(245, 158, 11, 0.94)",
-    canopyBot: "rgba(254, 249, 195, 0.98)",
-    rimStroke: "#fde047",
+    outerGlow: "rgba(253, 186, 116, 0.36)",
+    canopyTop: "rgba(194, 92, 30, 0.92)",
+    canopyMid: "rgba(251, 162, 64, 0.94)",
+    canopyBot: "rgba(255, 238, 194, 0.98)",
+    rimStroke: "#fed7aa",
     flameCore: "#ffffff",
-    flameMid: "#fef08a",
-    emberColor: "#fde047",
-    badgeClass: "text-[#fde047]",
+    flameMid: "#fef3c7",
+    emberColor: "#fde68a",
+    badgeClass: "text-[#fef3c7]",
   },
   rose: {
-    outerGlow: "rgba(234, 88, 12, 0.34)",
-    canopyTop: "rgba(127, 29, 29, 0.93)",
-    canopyMid: "rgba(220, 68, 28, 0.92)",
-    canopyBot: "rgba(254, 215, 170, 0.97)",
+    outerGlow: "rgba(234, 118, 52, 0.34)",
+    canopyTop: "rgba(164, 62, 22, 0.92)",
+    canopyMid: "rgba(236, 110, 38, 0.93)",
+    canopyBot: "rgba(254, 212, 152, 0.98)",
     rimStroke: "#fb923c",
     flameCore: "#ffffff",
     flameMid: "#fed7aa",
     emberColor: "#fb923c",
-    badgeClass: "text-[#fb923c]",
+    badgeClass: "text-[#fed7aa]",
   },
 };
 
@@ -488,64 +488,53 @@ function drawVolumetricLantern(
   ctx.rotate(tilt);
   ctx.globalAlpha = fadeAlpha;
 
-  // 1. Sculpted Kongming Hot-Air Balloon Silhouette Path
-  const wTop = 10.5 * s;
-  const wShoulder = 18 * s;
-  const wBase = 11 * s;
+  // 1. Faceted Kongming Wish-Lantern Silhouette (wider upper shoulder, flat-ish crown, tapered mouth)
+  const wTop = 13.2 * s;
+  const wShoulder = 16.8 * s;
+  const wBase = 10.4 * s;
   const hTop = -21 * s;
-  const hShoulder = -7 * s;
-  const hBase = 14.5 * s;
+  const hShoulder = -11 * s;
+  const hBase = 15.5 * s;
 
   ctx.beginPath();
-  ctx.moveTo(-wTop, hTop + 3 * s);
-  ctx.quadraticCurveTo(0, hTop - 2.5 * s, wTop, hTop + 3 * s);
-  ctx.bezierCurveTo(
-    wShoulder * 1.05,
-    hTop + 7 * s,
-    wShoulder,
-    hShoulder,
-    wBase,
-    hBase
-  );
-  ctx.quadraticCurveTo(0, hBase + 2.5 * s, -wBase, hBase);
-  ctx.bezierCurveTo(
-    -wShoulder,
-    hShoulder,
-    -wShoulder * 1.05,
-    hTop + 7 * s,
-    -wTop,
-    hTop + 3 * s
-  );
+  ctx.moveTo(-wTop, hTop + 1.8 * s);
+  ctx.quadraticCurveTo(0, hTop - 1.8 * s, wTop, hTop + 1.8 * s);
+  ctx.quadraticCurveTo(wShoulder * 1.03, hTop + 5 * s, wShoulder, hShoulder);
+  ctx.quadraticCurveTo(wShoulder * 0.92, hBase - 9 * s, wBase, hBase);
+  ctx.quadraticCurveTo(0, hBase + 3.6 * s, -wBase, hBase);
+  ctx.quadraticCurveTo(-wShoulder * 0.92, hBase - 9 * s, -wShoulder, hShoulder);
+  ctx.quadraticCurveTo(-wShoulder * 1.03, hTop + 5 * s, -wTop, hTop + 1.8 * s);
   ctx.closePath();
 
-  // 2. Translucent Rice-Paper Vertical Gradient + Subtle Edge Aura
+  // 2. Rich Warm Rice-Paper Vertical Gradient + Soft Edge Aura (no cartoon outline)
   ctx.save();
   ctx.shadowColor = pal.outerGlow;
-  ctx.shadowBlur = (isHovered ? 12 : 8) * s * flicker;
+  ctx.shadowBlur = (isHovered ? 14 : 9) * s * flicker;
   ctx.shadowOffsetY = 1 * s;
   const bodyGrad = ctx.createLinearGradient(0, hTop, 0, hBase);
   bodyGrad.addColorStop(0, pal.canopyTop);
-  bodyGrad.addColorStop(0.52, pal.canopyMid);
+  bodyGrad.addColorStop(0.42, pal.canopyMid);
   bodyGrad.addColorStop(1, pal.canopyBot);
   ctx.fillStyle = bodyGrad;
   ctx.fill();
   ctx.restore();
 
-  // 3. Internal radial light bloom clipped strictly inside the paper walls
+  // 3. Internal Candle Bloom & Subtle Warm Facet Step (no muddy gray)
   ctx.save();
   ctx.clip();
+
   const innerBloom = ctx.createRadialGradient(
     0,
     hBase - 3 * s,
     1 * s,
     0,
     hBase - 5 * s,
-    22 * s * flicker
+    24 * s * flicker
   );
   innerBloom.addColorStop(0, pal.flameCore);
-  innerBloom.addColorStop(0.38, pal.flameMid);
-  innerBloom.addColorStop(1, "rgba(0, 0, 0, 0)");
-  ctx.globalAlpha = 0.85 * flicker * fadeAlpha;
+  innerBloom.addColorStop(0.42, pal.flameMid);
+  innerBloom.addColorStop(1, "rgba(255, 180, 90, 0)");
+  ctx.globalAlpha = 0.78 * flicker * fadeAlpha;
   ctx.fillStyle = innerBloom;
   ctx.fillRect(
     -wShoulder * 1.2,
@@ -554,82 +543,74 @@ function drawVolumetricLantern(
     hBase - hTop + 10 * s
   );
 
-  // Delicate curved bamboo paper seam ribs
-  ctx.globalAlpha = 0.28 * fadeAlpha;
-  ctx.strokeStyle = pal.canopyTop;
-  ctx.lineWidth = 0.85 * s;
-  for (const ribFactor of [-0.52, 0, 0.52]) {
-    ctx.beginPath();
-    ctx.moveTo(wTop * ribFactor * 0.7, hTop + 1 * s);
-    ctx.quadraticCurveTo(
-      wShoulder * ribFactor * 1.15,
-      hShoulder,
-      wBase * ribFactor * 0.85,
-      hBase
-    );
-    ctx.stroke();
-  }
+  // Subtle warm-amber facet contrast (no dark gray/brown wash)
+  const facetShade = ctx.createLinearGradient(-wShoulder, 0, wShoulder, 0);
+  facetShade.addColorStop(0, "rgba(154, 52, 18, 0.20)");
+  facetShade.addColorStop(0.52, "rgba(154, 52, 18, 0.05)");
+  facetShade.addColorStop(0.56, "rgba(255, 244, 214, 0.09)");
+  facetShade.addColorStop(1, "rgba(154, 52, 18, 0.08)");
+  ctx.globalAlpha = fadeAlpha;
+  ctx.fillStyle = facetShade;
+  ctx.fillRect(
+    -wShoulder * 1.2,
+    hTop - 5 * s,
+    wShoulder * 2.4,
+    hBase - hTop + 10 * s
+  );
   ctx.restore();
 
-  // Silhouette rim highlight
-  ctx.strokeStyle = pal.rimStroke;
-  ctx.lineWidth = (isHovered ? 1.3 : 0.85) * s;
-  ctx.globalAlpha = (isHovered ? 0.95 : 0.72) * fadeAlpha;
-  ctx.stroke();
-
-  // 4. Elliptical 3D Bamboo Base Ring + Crossed Fuel-Frame Struts
+  // 4. Glowing Open Mouth + Delicate Bamboo Rim & Wires
   ctx.globalAlpha = fadeAlpha;
   ctx.beginPath();
-  ctx.ellipse(0, hBase, wBase, 3.2 * s, 0, 0, Math.PI * 2);
-  ctx.fillStyle = "#090d16";
-  ctx.fill();
-  ctx.strokeStyle = pal.rimStroke;
-  ctx.lineWidth = 1.05 * s;
-  ctx.stroke();
-
-  ctx.save();
-  ctx.strokeStyle = pal.rimStroke;
-  ctx.globalAlpha = 0.48 * fadeAlpha;
-  ctx.lineWidth = 0.7 * s;
-  ctx.beginPath();
-  ctx.moveTo(-wBase * 0.86, hBase);
-  ctx.lineTo(wBase * 0.86, hBase);
-  ctx.moveTo(-wBase * 0.35, hBase - 2.6 * s);
-  ctx.lineTo(wBase * 0.35, hBase + 2.6 * s);
-  ctx.stroke();
-  ctx.restore();
-
-  // 5. Crisp Flickering Teardrop Heart Flame inside the open base
-  ctx.save();
-  ctx.shadowColor = pal.flameMid;
-  ctx.shadowBlur = 8 * s * flicker;
-  ctx.fillStyle = "#ffffff";
-  ctx.beginPath();
-  ctx.moveTo(0, hBase - 2.8 * s * flicker);
-  ctx.quadraticCurveTo(2.4 * s * flicker, hBase + 0.4 * s, 0, hBase + 1.8 * s);
-  ctx.quadraticCurveTo(-2.4 * s * flicker, hBase + 0.4 * s, 0, hBase - 2.8 * s * flicker);
-  ctx.fill();
-  ctx.restore();
-
-  // Hanging silk tassel with top knot bead
-  ctx.fillStyle = pal.rimStroke;
-  ctx.globalAlpha = 0.82 * fadeAlpha;
-  ctx.beginPath();
-  ctx.arc(0, hBase + 3.6 * s, 1.05 * s, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.moveTo(0, hBase + 4.2 * s);
-  ctx.quadraticCurveTo(
-    Math.sin(tick * 2.5 + phase) * 2.6 * s,
-    hBase + 8.5 * s,
-    Math.sin(tick * 2.5 + phase) * 3.8 * s,
-    hBase + 12.8 * s
+  ctx.ellipse(0, hBase, wBase, 3.6 * s, 0, 0, Math.PI * 2);
+  const mouthGrad = ctx.createRadialGradient(
+    0,
+    hBase - 0.5 * s,
+    0.5 * s,
+    0,
+    hBase,
+    wBase * 1.05
   );
-  ctx.strokeStyle = pal.rimStroke;
-  ctx.lineWidth = 0.9 * s;
-  ctx.globalAlpha = 0.72 * fadeAlpha;
+  mouthGrad.addColorStop(0, "#fffdf5");
+  mouthGrad.addColorStop(0.42, pal.flameMid);
+  mouthGrad.addColorStop(1, pal.canopyMid);
+  ctx.fillStyle = mouthGrad;
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(38, 16, 6, 0.48)";
+  ctx.lineWidth = 0.85 * s;
   ctx.stroke();
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(38, 16, 6, 0.38)";
+  ctx.globalAlpha = 0.8 * fadeAlpha;
+  ctx.lineWidth = 0.55 * s;
+  ctx.beginPath();
+  ctx.moveTo(-wBase * 0.94, hBase);
+  ctx.lineTo(wBase * 0.94, hBase);
+  ctx.moveTo(-wBase * 0.32, hBase - 3.1 * s);
+  ctx.lineTo(wBase * 0.32, hBase + 3.1 * s);
+  ctx.stroke();
+  ctx.restore();
+
+  // 5. Soft Camera-Exposed Flame Core at Center of Open Mouth
+  ctx.save();
+  const flameGlow = ctx.createRadialGradient(
+    0,
+    hBase - 0.4 * s,
+    0.2 * s,
+    0,
+    hBase - 0.4 * s,
+    4.2 * s * flicker
+  );
+  flameGlow.addColorStop(0, "#ffffff");
+  flameGlow.addColorStop(0.45, "rgba(255, 248, 220, 0.85)");
+  flameGlow.addColorStop(1, "rgba(255, 220, 140, 0)");
+  ctx.fillStyle = flameGlow;
+  ctx.beginPath();
+  ctx.arc(0, hBase - 0.4 * s, 4.2 * s * flicker, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 
   ctx.restore();
 }
@@ -826,12 +807,20 @@ export function NightSkyInteractive({
     };
     applyCanvasSize();
 
-    // 22 horizontal lanes uniformly spanning the full width (4%..96% in ~4.3% steps),
-    // interleaved so consecutive vertical slots alternate smoothly across outer, mid-inner, and center sky
+    // 22 horizontal lanes: balanced on mobile/tablet, margin-weighted on wide screens (>= 1024px)
+    // so most lanterns frame the left/right margins instead of crowding the center content column.
     const SKY_LANES = [
-      0.04, 0.52, 0.23, 0.77, 0.13, 0.87, 0.36, 0.64, 0.18, 0.82, 0.44, 0.58,
-      0.085, 0.915, 0.31, 0.69, 0.155, 0.845, 0.40, 0.605, 0.27, 0.955,
+      0.08, 0.92, 0.24, 0.76, 0.14, 0.86, 0.36, 0.64, 0.18, 0.82, 0.44, 0.58,
+      0.04, 0.96, 0.31, 0.69, 0.155, 0.845, 0.40, 0.605, 0.27, 0.955,
     ];
+    const WIDE_SKY_LANES = [
+      0.035, 0.965, 0.085, 0.915, 0.14, 0.86, 0.19, 0.81, 0.06, 0.94, 0.115,
+      0.885, 0.46, 0.165, 0.835, 0.22, 0.78, 0.61, 0.045, 0.955, 0.25, 0.75,
+    ];
+    const getLaneX = (idx: number, w: number) => {
+      const lanes = w >= 1024 ? WIDE_SKY_LANES : SKY_LANES;
+      return lanes[idx % lanes.length] * w;
+    };
 
     const ACTIVE_LANTERN_COUNT = SKY_LANES.length;
     let quoteQueueCursor = ACTIVE_LANTERN_COUNT;
@@ -851,7 +840,7 @@ export function NightSkyInteractive({
       (_, idx) => {
         const item =
           INSPIRATIONAL_LANTERNS[idx % INSPIRATIONAL_LANTERNS.length];
-        const lx = SKY_LANES[idx] * width;
+        const lx = getLaneX(idx, width);
         const depthScale =
           idx % 3 === 0 ? 1.14 : idx % 3 === 1 ? 0.98 : 0.88;
         const slotY =
@@ -1233,7 +1222,7 @@ export function NightSkyInteractive({
       const nextLakeH = getLakeHeight(height);
 
       lanternsRef.current.forEach((l, idx) => {
-        l.baseX = SKY_LANES[idx % SKY_LANES.length] * width;
+        l.baseX = getLaneX(idx, width);
         const normY = (l.y - topLimit) / prevSpan;
         l.y = topLimit + normY * nextSpan;
         l.x = l.baseX + Math.sin(tick * l.swayFreq + l.phase) * l.swayAmp;
