@@ -842,8 +842,8 @@ export function NightSkyInteractive({
           x: lx,
           y: slotY,
           scale: depthScale,
-          swayAmp: 10 + (idx % 3) * 4,
-          swayFreq: 0.35 + (idx % 4) * 0.09,
+          swayAmp: 6 + (idx % 3) * 2.5,
+          swayFreq: 0.22 + (idx % 4) * 0.05,
           phase: idx * 1.7,
           fadeAlpha: 1,
           embers: Array.from({ length: 4 }, (_, eIdx) => ({
@@ -978,16 +978,17 @@ export function NightSkyInteractive({
     floatingPetalsRef.current = floatingLakePetals;
 
     let tick = 0;
+    let lastFrameTime = performance.now();
     let lastHoverId: string | null = null;
     const prefersReducedMotion =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    const UNIFORM_LANTERN_SPEED = 0.35;
+    const UNIFORM_LANTERN_SPEED = 0.15;
 
-    const paintScene = (stepPhysics: boolean) => {
+    const paintScene = (stepPhysics: boolean, dtScale = 1) => {
       if (stepPhysics && !prefersReducedMotion) {
-        tick += 0.016;
+        tick += 0.016 * dtScale;
       }
       ctx.clearRect(0, 0, width, height);
 
@@ -1077,11 +1078,11 @@ export function NightSkyInteractive({
               Math.sin(tick * 0.22) * 0.1 +
               Math.cos(tick * 0.95 + p.phase) * 0.22;
             const fallWave = Math.sin(tick * 0.9 + p.phase) * 0.03;
-            p.x += breezeVx + thermalVx;
-            p.y += UNIFORM_PETAL_FALL_SPEED + fallWave;
-            p.yaw += p.yawSpeed;
-            p.pitch += p.pitchSpeed;
-            p.roll += p.rollSpeed;
+            p.x += (breezeVx + thermalVx) * dtScale;
+            p.y += (UNIFORM_PETAL_FALL_SPEED + fallWave) * dtScale;
+            p.yaw += p.yawSpeed * dtScale;
+            p.pitch += p.pitchSpeed * dtScale;
+            p.roll += p.rollSpeed * dtScale;
 
             if (p.y > height + 20) {
               p.y = -20;
@@ -1117,8 +1118,8 @@ export function NightSkyInteractive({
         const isHovered = distToMouse < 30 * l.scale + 12;
 
         if (!isHovered && stepPhysics && !prefersReducedMotion) {
-          const harmonicBreath = Math.cos(tick * 0.8 + l.phase) * 0.038;
-          l.y -= UNIFORM_LANTERN_SPEED + harmonicBreath;
+          const harmonicBreath = Math.cos(tick * 0.6 + l.phase) * 0.02;
+          l.y -= (UNIFORM_LANTERN_SPEED + harmonicBreath) * dtScale;
           l.x = l.baseX + Math.sin(tick * l.swayFreq + l.phase) * l.swayAmp;
           if (l.y < topLimit) {
             l.y = curBottomLimit;
@@ -1252,12 +1253,15 @@ export function NightSkyInteractive({
       lastHoverId = null;
     };
 
-    const renderLoop = () => {
+    const renderLoop = (now = performance.now()) => {
       if (document.hidden) {
         animId = 0;
         return;
       }
-      paintScene(true);
+      const elapsedMs = Math.max(0, now - lastFrameTime);
+      lastFrameTime = now;
+      const dtScale = Math.min(2.5, elapsedMs / 16.6667);
+      paintScene(true, dtScale);
       if (!prefersReducedMotion) {
         animId = requestAnimationFrame(renderLoop);
       }
@@ -1270,6 +1274,7 @@ export function NightSkyInteractive({
           animId = 0;
         }
       } else if (!prefersReducedMotion && !animId) {
+        lastFrameTime = performance.now();
         animId = requestAnimationFrame(renderLoop);
       }
     };
