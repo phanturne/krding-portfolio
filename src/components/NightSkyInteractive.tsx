@@ -317,15 +317,15 @@ const HUE_PALETTES: Record<
     badgeClass: "text-[#fde047]",
   },
   rose: {
-    outerGlow: "rgba(251, 113, 133, 0.34)",
-    canopyTop: "rgba(136, 19, 55, 0.92)",
-    canopyMid: "rgba(225, 29, 72, 0.92)",
-    canopyBot: "rgba(254, 205, 211, 0.97)",
-    rimStroke: "#fda4af",
+    outerGlow: "rgba(234, 88, 12, 0.34)",
+    canopyTop: "rgba(127, 29, 29, 0.93)",
+    canopyMid: "rgba(220, 68, 28, 0.92)",
+    canopyBot: "rgba(254, 215, 170, 0.97)",
+    rimStroke: "#fb923c",
     flameCore: "#ffffff",
-    flameMid: "#fecdd3",
-    emberColor: "#fda4af",
-    badgeClass: "text-[#fda4af]",
+    flameMid: "#fed7aa",
+    emberColor: "#fb923c",
+    badgeClass: "text-[#fb923c]",
   },
 };
 
@@ -480,7 +480,7 @@ function drawVolumetricLantern(
   if (fadeAlpha <= 0.01) return;
   const pal = HUE_PALETTES[hue] || HUE_PALETTES.amber;
   const flicker = 0.93 + Math.sin(tick * 6.5 + phase) * 0.07;
-  const s = scale * (isHovered ? 1.16 : 1);
+  const s = scale * 1.48 * (isHovered ? 1.12 : 1);
 
   ctx.save();
   ctx.translate(x, y);
@@ -518,11 +518,11 @@ function drawVolumetricLantern(
   );
   ctx.closePath();
 
-  // 2. Translucent Rice-Paper Vertical Gradient + Shape-Conforming Warm Shadow Blur
+  // 2. Translucent Rice-Paper Vertical Gradient + Subtle Edge Aura
   ctx.save();
-  ctx.shadowColor = pal.rimStroke;
-  ctx.shadowBlur = (isHovered ? 22 : 14) * s * flicker;
-  ctx.shadowOffsetY = 2 * s;
+  ctx.shadowColor = pal.outerGlow;
+  ctx.shadowBlur = (isHovered ? 8 : 4.5) * s * flicker;
+  ctx.shadowOffsetY = 1 * s;
   const bodyGrad = ctx.createLinearGradient(0, hTop, 0, hBase);
   bodyGrad.addColorStop(0, pal.canopyTop);
   bodyGrad.addColorStop(0.52, pal.canopyMid);
@@ -557,7 +557,7 @@ function drawVolumetricLantern(
   // Delicate curved bamboo paper seam ribs
   ctx.globalAlpha = 0.28 * fadeAlpha;
   ctx.strokeStyle = pal.canopyTop;
-  ctx.lineWidth = 0.9 * s;
+  ctx.lineWidth = 0.85 * s;
   for (const ribFactor of [-0.52, 0, 0.52]) {
     ctx.beginPath();
     ctx.moveTo(wTop * ribFactor * 0.7, hTop + 1 * s);
@@ -573,42 +573,62 @@ function drawVolumetricLantern(
 
   // Silhouette rim highlight
   ctx.strokeStyle = pal.rimStroke;
-  ctx.lineWidth = (isHovered ? 1.4 : 0.95) * s;
+  ctx.lineWidth = (isHovered ? 1.3 : 0.85) * s;
   ctx.globalAlpha = (isHovered ? 0.95 : 0.72) * fadeAlpha;
   ctx.stroke();
 
-  // 4. Elliptical 3D Bamboo Base Ring
+  // 4. Elliptical 3D Bamboo Base Ring + Crossed Fuel-Frame Struts
   ctx.globalAlpha = fadeAlpha;
   ctx.beginPath();
   ctx.ellipse(0, hBase, wBase, 3.2 * s, 0, 0, Math.PI * 2);
   ctx.fillStyle = "#090d16";
   ctx.fill();
   ctx.strokeStyle = pal.rimStroke;
-  ctx.lineWidth = 1.2 * s;
+  ctx.lineWidth = 1.05 * s;
   ctx.stroke();
 
-  // 5. Crisp Flickering Heart Flame inside the open base
+  ctx.save();
+  ctx.strokeStyle = pal.rimStroke;
+  ctx.globalAlpha = 0.48 * fadeAlpha;
+  ctx.lineWidth = 0.7 * s;
+  ctx.beginPath();
+  ctx.moveTo(-wBase * 0.86, hBase);
+  ctx.lineTo(wBase * 0.86, hBase);
+  ctx.moveTo(-wBase * 0.35, hBase - 2.6 * s);
+  ctx.lineTo(wBase * 0.35, hBase + 2.6 * s);
+  ctx.stroke();
+  ctx.restore();
+
+  // 5. Crisp Flickering Teardrop Heart Flame inside the open base
   ctx.save();
   ctx.shadowColor = pal.flameMid;
   ctx.shadowBlur = 8 * s * flicker;
   ctx.fillStyle = "#ffffff";
   ctx.beginPath();
-  ctx.arc(0, hBase + 0.3 * s, 2.4 * s * flicker, 0, Math.PI * 2);
+  ctx.moveTo(0, hBase - 2.8 * s * flicker);
+  ctx.quadraticCurveTo(2.4 * s * flicker, hBase + 0.4 * s, 0, hBase + 1.8 * s);
+  ctx.quadraticCurveTo(-2.4 * s * flicker, hBase + 0.4 * s, 0, hBase - 2.8 * s * flicker);
   ctx.fill();
   ctx.restore();
 
-  // Hanging silk tassel
+  // Hanging silk tassel with top knot bead
+  ctx.fillStyle = pal.rimStroke;
+  ctx.globalAlpha = 0.82 * fadeAlpha;
   ctx.beginPath();
-  ctx.moveTo(0, hBase + 3 * s);
+  ctx.arc(0, hBase + 3.6 * s, 1.05 * s, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(0, hBase + 4.2 * s);
   ctx.quadraticCurveTo(
-    Math.sin(tick * 2.5 + phase) * 2.5 * s,
-    hBase + 7.5 * s,
-    Math.sin(tick * 2.5 + phase) * 3.5 * s,
-    hBase + 11.5 * s
+    Math.sin(tick * 2.5 + phase) * 2.6 * s,
+    hBase + 8.5 * s,
+    Math.sin(tick * 2.5 + phase) * 3.8 * s,
+    hBase + 12.8 * s
   );
   ctx.strokeStyle = pal.rimStroke;
-  ctx.lineWidth = 0.95 * s;
-  ctx.globalAlpha = 0.75 * fadeAlpha;
+  ctx.lineWidth = 0.9 * s;
+  ctx.globalAlpha = 0.72 * fadeAlpha;
   ctx.stroke();
 
   ctx.restore();
@@ -1102,10 +1122,10 @@ export function NightSkyInteractive({
       // 2A. Far-Plane Falling Sakura Petals
       stepAndDrawFallingPetals("far");
 
-      // 2B. Step & Render Width-Proportional Kongming Lanterns (~1 per 128px, up to 22 on 2800px)
+      // 2B. Step & Render Width-Proportional Kongming Lanterns (~1 per 220px for larger, detailed lanterns)
       const visibleLanternCount = Math.max(
-        4,
-        Math.min(lanternsRef.current.length, Math.round(width / 128))
+        2,
+        Math.min(lanternsRef.current.length, Math.round(width / 220))
       );
       const visibleLanterns = lanternsRef.current.slice(0, visibleLanternCount);
       let foundHover: { item: LanternQuote; x: number; y: number } | null =
