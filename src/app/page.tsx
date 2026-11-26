@@ -1,8 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { NightSkyInteractive } from "@/components/NightSkyInteractive";
+import dynamic from "next/dynamic";
 import { PmdSpriteCompanion } from "@/components/CardMicroInteractions";
+
+const NightSkyInteractive = dynamic(
+  () =>
+    import("@/components/NightSkyInteractive").then(
+      (mod) => mod.NightSkyInteractive
+    ),
+  { ssr: false }
+);
 
 interface SceneItem {
   id: string;
@@ -331,15 +339,14 @@ export default function PortfolioPage() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         closeLightbox();
-      } else if (e.key === "ArrowLeft" && activeGalleryIdx > 0) {
+      } else if (e.key === "ArrowLeft") {
         e.preventDefault();
-        setActiveGalleryIdx(activeGalleryIdx - 1);
-      } else if (
-        e.key === "ArrowRight" &&
-        activeGalleryIdx < activeGalleryScenes.length - 1
-      ) {
+        setActiveGalleryIdx((idx) => Math.max(0, idx - 1));
+      } else if (e.key === "ArrowRight") {
         e.preventDefault();
-        setActiveGalleryIdx(activeGalleryIdx + 1);
+        setActiveGalleryIdx((idx) =>
+          Math.min(activeGalleryScenes.length - 1, idx + 1)
+        );
       } else if (e.key === "Tab" && dialogRef.current) {
         const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
           'button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
@@ -358,16 +365,14 @@ export default function PortfolioPage() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    isLightboxOpen,
-    activeGalleryIdx,
-    activeGalleryScenes,
-    setActiveGalleryIdx,
-  ]);
+  }, [isLightboxOpen, activeGalleryScenes, setActiveGalleryIdx]);
 
   return (
     <div className="min-h-screen relative flex flex-col">
-      <NightSkyInteractive skyEnabled={skyEnabled} />
+      <NightSkyInteractive
+        skyEnabled={skyEnabled}
+        paused={Boolean(expandedScene && activeGalleryScenes)}
+      />
 
       <a
         href="#main-content"
