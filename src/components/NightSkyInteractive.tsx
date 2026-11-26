@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef } from "react";
 
 export interface LanternQuote {
   id: string;
@@ -330,45 +330,48 @@ const HUE_PALETTES: Record<
   },
 };
 
-function drawNotchedPetalPath(ctx: CanvasRenderingContext2D) {
+type PetalGradients = Record<"blush" | "coral" | "mauve", CanvasGradient>;
+
+function createNotchedPetalPath(): Path2D {
   const w = 5.6;
   const h = 8.2;
-  ctx.beginPath();
-  ctx.moveTo(0, h);
-  ctx.bezierCurveTo(-w * 1.15, h * 0.3, -w * 0.95, -h * 0.65, -w * 0.36, -h);
-  ctx.lineTo(0, -h * 0.7);
-  ctx.lineTo(w * 0.36, -h);
-  ctx.bezierCurveTo(w * 0.95, -h * 0.65, w * 1.15, h * 0.3, 0, h);
-  ctx.closePath();
+  const path = new Path2D();
+  path.moveTo(0, h);
+  path.bezierCurveTo(-w * 1.15, h * 0.3, -w * 0.95, -h * 0.65, -w * 0.36, -h);
+  path.lineTo(0, -h * 0.7);
+  path.lineTo(w * 0.36, -h);
+  path.bezierCurveTo(w * 0.95, -h * 0.65, w * 1.15, h * 0.3, 0, h);
+  path.closePath();
+  return path;
 }
 
-function createPetalGradient(
-  ctx: CanvasRenderingContext2D,
-  variant: "blush" | "coral" | "mauve",
-  warmProximity: number
-) {
+function createPetalGradients(ctx: CanvasRenderingContext2D): PetalGradients {
   const h = 8.2;
-  const grad = ctx.createLinearGradient(0, -h, 0, h);
-  if (warmProximity > 0.25 || variant === "coral") {
-    grad.addColorStop(0, "#fff1f2");
-    grad.addColorStop(0.55, "#fda4af");
-    grad.addColorStop(1, "#fb7185");
-  } else if (variant === "mauve") {
-    grad.addColorStop(0, "#fdf2f8");
-    grad.addColorStop(0.6, "#f472b6");
-    grad.addColorStop(1, "#db2777");
-  } else {
-    grad.addColorStop(0, "#fff1f2");
-    grad.addColorStop(0.55, "#fbcfe8");
-    grad.addColorStop(1, "#f472b6");
-  }
-  return grad;
+
+  const coral = ctx.createLinearGradient(0, -h, 0, h);
+  coral.addColorStop(0, "#fff1f2");
+  coral.addColorStop(0.55, "#fda4af");
+  coral.addColorStop(1, "#fb7185");
+
+  const mauve = ctx.createLinearGradient(0, -h, 0, h);
+  mauve.addColorStop(0, "#fdf2f8");
+  mauve.addColorStop(0.6, "#f472b6");
+  mauve.addColorStop(1, "#db2777");
+
+  const blush = ctx.createLinearGradient(0, -h, 0, h);
+  blush.addColorStop(0, "#fff1f2");
+  blush.addColorStop(0.55, "#fbcfe8");
+  blush.addColorStop(1, "#f472b6");
+
+  return { blush, coral, mauve };
 }
 
 function drawFallingSakuraPetal(
   ctx: CanvasRenderingContext2D,
   p: SakuraPetal,
-  warmProximity: number
+  warmProximity: number,
+  petalPath: Path2D,
+  petalGrads: PetalGradients
 ) {
   ctx.save();
   ctx.translate(p.x, p.y);
@@ -384,21 +387,17 @@ function drawFallingSakuraPetal(
   const edgeSpecular = (1 - Math.abs(rawCosPitch)) * 0.14;
   ctx.globalAlpha = Math.min(0.75, p.alpha + edgeSpecular + warmProximity * 0.18);
 
-  if (warmProximity > 0.15) {
-    ctx.shadowColor = "rgba(251, 191, 36, 0.38)";
-    ctx.shadowBlur = 4;
-  }
-
-  drawNotchedPetalPath(ctx);
-  ctx.fillStyle = createPetalGradient(ctx, p.variant, warmProximity);
-  ctx.fill();
+  ctx.fillStyle = warmProximity > 0.25 ? petalGrads.coral : petalGrads[p.variant];
+  ctx.fill(petalPath);
   ctx.restore();
 }
 
 function drawFloatingSakuraPetal(
   ctx: CanvasRenderingContext2D,
   p: SakuraPetal,
-  warmProximity: number
+  warmProximity: number,
+  petalPath: Path2D,
+  petalGrads: PetalGradients
 ) {
   const fadeIn = Math.min(1, p.floatAge / 45);
   const fadeStart = p.maxFloatAge * 0.72;
@@ -424,10 +423,8 @@ function drawFloatingSakuraPetal(
     ctx.save();
     ctx.beginPath();
     ctx.ellipse(p.x, p.y, rx, ry, 0, 0, Math.PI * 2);
-    ctx.strokeStyle =
-      warmProximity > 0.12
-        ? `rgba(253, 224, 71, ${rippleAlpha})`
-        : `rgba(186, 230, 253, ${rippleAlpha})`;
+    ctx.globalAlpha = rippleAlpha;
+    ctx.strokeStyle = warmProximity > 0.12 ? "#fde047" : "#bae6fd";
     ctx.lineWidth = isTouchdown ? 0.95 : 0.75;
     ctx.stroke();
 
@@ -437,7 +434,8 @@ function drawFloatingSakuraPetal(
       const ry2 = rx2 * 0.32;
       ctx.beginPath();
       ctx.ellipse(p.x, p.y, rx2, ry2, 0, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(251, 207, 232, ${(1 - p2) * 0.28 * floatFade})`;
+      ctx.globalAlpha = (1 - p2) * 0.28 * floatFade;
+      ctx.strokeStyle = "#fbcfe8";
       ctx.lineWidth = 0.7;
       ctx.stroke();
     }
@@ -450,9 +448,8 @@ function drawFloatingSakuraPetal(
   ctx.scale(p.scale * 1.0, p.scale * 0.45);
   ctx.rotate(p.yaw);
   ctx.globalAlpha = Math.min(0.45, p.alpha * 0.55) * floatFade;
-  drawNotchedPetalPath(ctx);
   ctx.fillStyle = warmProximity > 0.18 ? "#fbbf24" : "#db2777";
-  ctx.fill();
+  ctx.fill(petalPath);
   ctx.restore();
 
   // 3. Foreshortened 2.5D Petal Resting Flat on the Lake Surface (Hana-Ikada)
@@ -461,9 +458,8 @@ function drawFloatingSakuraPetal(
   ctx.scale(p.scale * 1.0, p.scale * 0.45);
   ctx.rotate(p.yaw);
   ctx.globalAlpha = Math.min(0.92, p.alpha + 0.32 + warmProximity * 0.2) * floatFade;
-  drawNotchedPetalPath(ctx);
-  ctx.fillStyle = createPetalGradient(ctx, p.variant, warmProximity);
-  ctx.fill();
+  ctx.fillStyle = warmProximity > 0.25 ? petalGrads.coral : petalGrads[p.variant];
+  ctx.fill(petalPath);
   ctx.restore();
 }
 
@@ -624,25 +620,19 @@ function drawMidnightLakeAndReflections(
   lakeHeight: number,
   tick: number,
   lanterns: ActiveLantern[],
-  floatingPetals: SakuraPetal[]
+  visibleLanternCount: number,
+  floatingPetals: SakuraPetal[],
+  shimmerGrad: CanvasGradient,
+  petalPath: Path2D,
+  petalGrads: PetalGradients
 ) {
   // Only render when the lake at the bottom of the page is within the viewport
   if (waterY >= height + 24) return;
   const waterDepth = lakeHeight;
 
-  // 1. Atmospheric Nocturnal Lake Gradient with a soft misty shoreline transition
-  const featherTop = waterY - 48;
-  const lakeGrad = ctx.createLinearGradient(0, featherTop, 0, waterY + waterDepth);
-  lakeGrad.addColorStop(0, "rgba(9, 11, 15, 0)");
-  lakeGrad.addColorStop(0.28, "rgba(18, 32, 50, 0.34)");
-  lakeGrad.addColorStop(0.54, "rgba(21, 38, 60, 0.68)");
-  lakeGrad.addColorStop(0.78, "rgba(14, 25, 42, 0.88)");
-  lakeGrad.addColorStop(1, "rgba(8, 14, 24, 0.96)");
-  ctx.fillStyle = lakeGrad;
-  ctx.fillRect(0, featherTop, width, height - featherTop);
-
   // Soft moonlit water shimmer (feathered radial perspective bands + subtle off-center moon column)
   ctx.save();
+  ctx.fillStyle = shimmerGrad;
   const moonCenterX = width * 0.68;
   for (let i = 0; i < 16; i++) {
     const t = (i + 0.5) / 16;
@@ -665,16 +655,11 @@ function drawMidnightLakeAndReflections(
 
     const pulse = 0.72 + Math.sin(tick * 1.1 + i * 1.9) * 0.28;
     const baseAlpha = inMoonColumn ? 0.095 : 0.038;
-    const alpha = baseAlpha * pulse * (1 - perspective * 0.35);
+    ctx.globalAlpha = baseAlpha * pulse * (1 - perspective * 0.35);
 
     ctx.save();
     ctx.translate(rx, ry);
     ctx.scale(rw, rh);
-    const shimmer = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
-    shimmer.addColorStop(0, `rgba(196, 222, 248, ${alpha.toFixed(3)})`);
-    shimmer.addColorStop(0.45, `rgba(162, 196, 232, ${(alpha * 0.45).toFixed(3)})`);
-    shimmer.addColorStop(1, "rgba(162, 196, 232, 0)");
-    ctx.fillStyle = shimmer;
     ctx.beginPath();
     ctx.arc(0, 0, 1, 0, Math.PI * 2);
     ctx.fill();
@@ -683,7 +668,8 @@ function drawMidnightLakeAndReflections(
   ctx.restore();
 
   // 2. Cohesive Single-Lantern Water Reflections (1 lantern above = 1 soft mirrored reflection on the water)
-  for (const l of lanterns) {
+  for (let i = 0; i < visibleLanternCount; i++) {
+    const l = lanterns[i];
     if (l.fadeAlpha <= 0.02 || l.y > waterY - 14) continue;
     const pal = HUE_PALETTES[l.item.hue] || HUE_PALETTES.amber;
     const dy = Math.max(2, waterY - l.y);
@@ -758,23 +744,28 @@ function drawMidnightLakeAndReflections(
   for (const p of floatingPetals) {
     if (p.y > height + 16) continue;
     let warmProx = 0;
-    for (const l of lanterns) {
+    for (let i = 0; i < visibleLanternCount; i++) {
+      const l = lanterns[i];
       const dx = Math.abs(p.x - l.x);
       if (dx < 52 && l.fadeAlpha > 0.1) {
         const prox = (1 - dx / 52) * l.fadeAlpha;
         if (prox > warmProx) warmProx = prox;
       }
     }
-    drawFloatingSakuraPetal(ctx, p, warmProx);
+    drawFloatingSakuraPetal(ctx, p, warmProx, petalPath, petalGrads);
   }
 }
 
-export function NightSkyInteractive({
+export const NightSkyInteractive = memo(function NightSkyInteractive({
   skyEnabled,
+  paused = false,
 }: {
   skyEnabled: boolean;
+  paused?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const pausedRef = useRef(paused);
+  const resumeLoopRef = useRef<(() => void) | null>(null);
   const mouseRef = useRef<{ x: number; y: number; active: boolean }>({
     x: -9999,
     y: -9999,
@@ -786,6 +777,13 @@ export function NightSkyInteractive({
   const floatingPetalsRef = useRef<SakuraPetal[]>([]);
 
   useEffect(() => {
+    pausedRef.current = paused;
+    if (!paused) {
+      resumeLoopRef.current?.();
+    }
+  }, [paused]);
+
+  useEffect(() => {
     if (!skyEnabled) {
       return;
     }
@@ -794,7 +792,23 @@ export function NightSkyInteractive({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const getLakeHeight = (h: number) =>
+      Math.min(140, Math.max(100, Math.round(h * 0.15)));
+    // Keep the midnight lake permanently visible at the bottom of the viewport
+    const getWaterY = (h: number) => h - getLakeHeight(h);
+
+    const petalPath = createNotchedPetalPath();
+    const petalGrads = createPetalGradients(ctx);
+    const shimmerGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+    shimmerGrad.addColorStop(0, "rgba(196, 222, 248, 1)");
+    shimmerGrad.addColorStop(0.45, "rgba(162, 196, 232, 0.45)");
+    shimmerGrad.addColorStop(1, "rgba(162, 196, 232, 0)");
+
+    const backdropCanvas = document.createElement("canvas");
+    const backdropCtx = backdropCanvas.getContext("2d");
+
     let animId = 0;
+    let resizeRafId = 0;
     let width = window.innerWidth;
     let height = window.innerHeight;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -805,6 +819,60 @@ export function NightSkyInteractive({
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      if (backdropCtx) {
+        backdropCanvas.width = canvas.width;
+        backdropCanvas.height = canvas.height;
+        backdropCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        backdropCtx.clearRect(0, 0, width, height);
+
+        const moonBeam = backdropCtx.createRadialGradient(
+          width * 0.82,
+          height * 0.08,
+          10,
+          width * 0.75,
+          height * 0.25,
+          Math.max(width, height) * 0.55
+        );
+        moonBeam.addColorStop(0, "rgba(251, 191, 36, 0.055)");
+        moonBeam.addColorStop(0.45, "rgba(16, 35, 71, 0.045)");
+        moonBeam.addColorStop(1, "rgba(6, 11, 20, 0)");
+        backdropCtx.fillStyle = moonBeam;
+        backdropCtx.fillRect(0, 0, width, height);
+
+        for (const canopyX of [width * 0.06, width * 0.94]) {
+          const canopyGlow = backdropCtx.createRadialGradient(
+            canopyX,
+            -10,
+            10,
+            canopyX,
+            40,
+            Math.min(width, height) * 0.36
+          );
+          canopyGlow.addColorStop(0, "rgba(244, 114, 182, 0.07)");
+          canopyGlow.addColorStop(0.55, "rgba(251, 113, 133, 0.025)");
+          canopyGlow.addColorStop(1, "rgba(6, 11, 20, 0)");
+          backdropCtx.fillStyle = canopyGlow;
+          backdropCtx.fillRect(0, 0, width, height * 0.45);
+        }
+
+        const lakeH = getLakeHeight(height);
+        const waterY = getWaterY(height);
+        const featherTop = waterY - 48;
+        const lakeGrad = backdropCtx.createLinearGradient(
+          0,
+          featherTop,
+          0,
+          waterY + lakeH
+        );
+        lakeGrad.addColorStop(0, "rgba(9, 11, 15, 0)");
+        lakeGrad.addColorStop(0.28, "rgba(18, 32, 50, 0.34)");
+        lakeGrad.addColorStop(0.54, "rgba(21, 38, 60, 0.68)");
+        lakeGrad.addColorStop(0.78, "rgba(14, 25, 42, 0.88)");
+        lakeGrad.addColorStop(1, "rgba(8, 14, 24, 0.96)");
+        backdropCtx.fillStyle = lakeGrad;
+        backdropCtx.fillRect(0, featherTop, width, height - featherTop);
+      }
     };
     applyCanvasSize();
 
@@ -825,11 +893,6 @@ export function NightSkyInteractive({
     const ACTIVE_LANTERN_COUNT = SKY_LANES.length;
     let quoteQueueCursor = ACTIVE_LANTERN_COUNT;
 
-    const getLakeHeight = (h: number) =>
-      Math.min(140, Math.max(100, Math.round(h * 0.15)));
-    // Keep the midnight lake permanently visible at the bottom of the viewport
-    const getWaterY = (h: number) => h - getLakeHeight(h);
-
     const topLimit = -18;
     const initialLakeH = getLakeHeight(height);
     const initialBottomLimit = height - initialLakeH - 26;
@@ -840,51 +903,89 @@ export function NightSkyInteractive({
       Math.min(ACTIVE_LANTERN_COUNT, Math.round(width / 220))
     );
     const initialInSkyCount = Math.max(1, Math.ceil(initialVisibleCount * 0.6));
-    const shuffledSlots = Array.from(
-      { length: initialInSkyCount },
-      (_, i) => i
-    );
-    for (let i = shuffledSlots.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledSlots[i], shuffledSlots[j]] = [
-        shuffledSlots[j],
-        shuffledSlots[i],
-      ];
-    }
+    const isSideLane = (normX: number, w = width) => {
+      const marginNorm =
+        w >= 1024 ? Math.max(0.11, ((w - 1200) * 0.5 + 32) / w) : 0.24;
+      return normX <= marginNorm || normX >= 1 - marginNorm;
+    };
+    const initLanes = width >= 1024 ? WIDE_SKY_LANES : SKY_LANES;
+    const usedInitLaneIndices = new Set<number>();
+    const placedInitCoords: Array<{ x: number; y: number }> = [];
 
     lanternsRef.current = Array.from(
       { length: ACTIVE_LANTERN_COUNT },
       (_, idx) => {
         const item =
           INSPIRATIONAL_LANTERNS[idx % INSPIRATIONAL_LANTERNS.length];
-        const lx = getLaneX(idx, width);
         const depthScale = idx % 2 === 0 ? 1.14 : 0.98;
         let slotY: number;
         if (idx < initialInSkyCount) {
-          const baseNorm = (shuffledSlots[idx] + 0.5) / initialInSkyCount;
-          const jitter = (Math.random() - 0.5) * 0.08;
+          const baseNorm = (idx + 0.5) / initialInSkyCount;
+          const jitter = (Math.random() - 0.5) * (0.35 / initialInSkyCount);
           slotY =
             topLimit +
-            Math.max(0.06, Math.min(0.86, baseNorm + jitter)) * totalSpan;
-        } else if (idx < initialVisibleCount) {
-          // Stagger remaining visible lanterns just below the shoreline so they enter smoothly
-          const queueIdx = idx - initialInSkyCount;
-          const queueTotal = Math.max(1, initialVisibleCount - initialInSkyCount);
-          slotY =
-            initialBottomLimit +
-            20 +
-            ((queueIdx + Math.random() * 0.6) / queueTotal) * 140;
+            Math.max(0.06, Math.min(0.88, baseNorm + jitter)) * totalSpan;
         } else {
-          const baseNorm = (idx * 0.61803398875 + 0.13) % 1;
-          slotY = topLimit + baseNorm * totalSpan;
+          // Park remaining lanterns off-screen so they enter cleanly via GLOBAL_SPAWN_COOLDOWN_MS
+          slotY = -300;
         }
+
+        let lx = getLaneX(idx, width);
+        if (idx < initialInSkyCount) {
+          const sideIndices = initLanes
+            .map((norm, c) => (isSideLane(norm) ? c : -1))
+            .filter((c) => c !== -1);
+          const firstPool =
+            sideIndices.length > 0
+              ? sideIndices
+              : initLanes.map((_, c) => c);
+          let bestLaneIdx = -1;
+          if (placedInitCoords.length === 0) {
+            bestLaneIdx =
+              firstPool[Math.floor(Math.random() * firstPool.length)];
+          } else {
+            let bestScore = -Infinity;
+            for (let c = 0; c < initLanes.length; c++) {
+              if (width >= 1024 && !isSideLane(initLanes[c])) continue;
+              if (usedInitLaneIndices.has(c)) continue;
+              const candX = Math.max(
+                32,
+                Math.min(width - 32, initLanes[c] * width)
+              );
+              let minDist = Infinity;
+              for (const p of placedInitCoords) {
+                const d = Math.hypot(p.x - candX, (p.y - slotY) * 0.85);
+                if (d < minDist) minDist = d;
+              }
+              const centerPenalty = isSideLane(initLanes[c]) ? 0 : 320;
+              const score = minDist - centerPenalty;
+              if (score > bestScore) {
+                bestScore = score;
+                bestLaneIdx = c;
+              }
+            }
+          }
+
+          if (bestLaneIdx === -1) {
+            // No unused side lane left (e.g. ultrawide); park off-screen until a lane clears
+            slotY = -300;
+          } else {
+            usedInitLaneIndices.add(bestLaneIdx);
+            lx = Math.max(
+              32,
+              Math.min(width - 32, initLanes[bestLaneIdx] * width)
+            );
+            placedInitCoords.push({ x: lx, y: slotY });
+          }
+        }
+
         return {
           item,
           baseX: lx,
           x: lx,
           y: slotY,
           scale: depthScale,
-          speedFactor: 0.85 + Math.random() * 0.3,
+          speedFactor: 0.95 + Math.random() * 0.1,
           swayAmp: 6 + (idx % 3) * 2.5,
           swayFreq: 0.22 + (idx % 4) * 0.05,
           phase: idx * 1.7,
@@ -1019,23 +1120,84 @@ export function NightSkyInteractive({
 
     fallingPetalsRef.current = fallingPetals;
     floatingPetalsRef.current = floatingLakePetals;
+    const farPetals = fallingPetals.filter((p) => p.plane === "far");
+    const midPetals = fallingPetals.filter((p) => p.plane === "mid");
+    const nearPetals = fallingPetals.filter((p) => p.plane === "near");
 
     let tick = 0;
     let lastFrameTime = performance.now();
-    let lastHoverId: string | null = null;
-    const laneLastSpawnMs = new Map<number, number>();
-    const LANE_COOLDOWN_MS = 10_000;
+    let lastParkedCheckBucket = -1;
+    let lastSpawnHalf: "left" | "right" | null = null;
+    let lastGlobalSpawnMs = performance.now();
+    const GLOBAL_SPAWN_COOLDOWN_MS = 7_500;
     const prefersReducedMotion =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
     const UNIFORM_LANTERN_SPEED = 0.24;
+    const UNIFORM_PETAL_FALL_SPEED = 0.23;
+
+    const stepAndDrawFallingPetals = (
+      petals: SakuraPetal[],
+      visibleLanternCount: number,
+      stepPhysics: boolean,
+      dtScale: number
+    ) => {
+      const lanterns = lanternsRef.current;
+      for (let pi = 0; pi < petals.length; pi++) {
+        const p = petals[pi];
+        let maxLanternProximity = 0;
+        let thermalVx = 0;
+
+        for (let li = 0; li < visibleLanternCount; li++) {
+          const l = lanterns[li];
+          if (l.fadeAlpha <= 0.02) continue;
+          const dx = p.x - l.x;
+          const dy = p.y - l.y;
+          if (dy < 10 && dy > -65 && Math.abs(dx) < 38) {
+            thermalVx = (dx >= 0 ? 1 : -1) * 0.09;
+          }
+          if (Math.abs(dx) >= 115 || Math.abs(dy) >= 115) continue;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < 13225) {
+            const prox = 1 - Math.sqrt(distSq) / 115;
+            if (prox > maxLanternProximity) maxLanternProximity = prox;
+          }
+        }
+
+        if (stepPhysics && !prefersReducedMotion) {
+          const breezeVx =
+            p.baseVx +
+            Math.sin(tick * 0.22) * 0.1 +
+            Math.cos(tick * 0.95 + p.phase) * 0.22;
+          const fallWave = Math.sin(tick * 0.9 + p.phase) * 0.03;
+          p.x += (breezeVx + thermalVx) * dtScale;
+          p.y += (UNIFORM_PETAL_FALL_SPEED + fallWave) * dtScale;
+          p.yaw += p.yawSpeed * dtScale;
+          p.pitch += p.pitchSpeed * dtScale;
+          p.roll += p.rollSpeed * dtScale;
+
+          if (p.y > height + 20) {
+            p.y = -20;
+            p.x = p.spawnXRatio * width;
+          }
+          if (p.x > width + 24) {
+            p.x = -18;
+          } else if (p.x < -24) {
+            p.x = width + 18;
+          }
+        }
+
+        drawFallingSakuraPetal(ctx, p, maxLanternProximity, petalPath, petalGrads);
+      }
+    };
 
     const paintScene = (stepPhysics: boolean, dtScale = 1) => {
       if (stepPhysics && !prefersReducedMotion) {
         tick += 0.016 * dtScale;
       }
       ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(backdropCanvas, 0, 0, width, height);
 
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
@@ -1043,45 +1205,19 @@ export function NightSkyInteractive({
       const waterY = getWaterY(height);
       // Lanterns launch well above the water surface (waterY - 28) when the lake is in view, or near the bottom of the screen when at the top of the page
       const curBottomLimit = Math.min(height - 16, waterY - 28);
-
-      // 1. Velvet Midnight Sky Wash & Top-Corner Yozakura (Cherry Blossom Canopy) Glow
-      const moonBeam = ctx.createRadialGradient(
-        width * 0.82,
-        height * 0.08,
-        10,
-        width * 0.75,
-        height * 0.25,
-        Math.max(width, height) * 0.55
+      const visibleLanternCount = Math.max(
+        2,
+        Math.min(lanternsRef.current.length, Math.round(width / 220))
       );
-      moonBeam.addColorStop(0, "rgba(251, 191, 36, 0.055)");
-      moonBeam.addColorStop(0.45, "rgba(16, 35, 71, 0.045)");
-      moonBeam.addColorStop(1, "rgba(6, 11, 20, 0)");
-      ctx.fillStyle = moonBeam;
-      ctx.fillRect(0, 0, width, height);
-
-      for (const canopyX of [width * 0.06, width * 0.94]) {
-        const canopyGlow = ctx.createRadialGradient(
-          canopyX,
-          -10,
-          10,
-          canopyX,
-          40,
-          Math.min(width, height) * 0.36
-        );
-        canopyGlow.addColorStop(0, "rgba(244, 114, 182, 0.07)");
-        canopyGlow.addColorStop(0.55, "rgba(251, 113, 133, 0.025)");
-        canopyGlow.addColorStop(1, "rgba(6, 11, 20, 0)");
-        ctx.fillStyle = canopyGlow;
-        ctx.fillRect(0, 0, width, height * 0.45);
-      }
 
       // Step floating water petals on the lake surface
       if (stepPhysics && !prefersReducedMotion) {
         for (const p of floatingPetalsRef.current) {
           p.y = waterY + p.waterTargetRatio * lakeH;
-          p.floatAge += 1;
-          p.x += (0.08 + Math.sin(tick * 0.4 + p.phase) * 0.05) * p.scale;
-          p.yaw += Math.sin(tick * 0.6 + p.phase) * 0.0018;
+          p.floatAge += dtScale;
+          p.x +=
+            (0.08 + Math.sin(tick * 0.4 + p.phase) * 0.05) * p.scale * dtScale;
+          p.yaw += Math.sin(tick * 0.6 + p.phase) * 0.0018 * dtScale;
 
           if (p.x > width + 20) p.x = -16;
           if (p.floatAge >= p.maxFloatAge) {
@@ -1095,73 +1231,25 @@ export function NightSkyInteractive({
         }
       }
 
-      // Step falling sky petals (uniform vertical spacing, zero per-frame allocations)
-      const UNIFORM_PETAL_FALL_SPEED = 0.23;
-      const stepAndDrawFallingPetals = (targetPlane: "far" | "mid" | "near") => {
-        for (const p of fallingPetalsRef.current) {
-          if (p.plane !== targetPlane) continue;
-
-          let maxLanternProximity = 0;
-          let thermalVx = 0;
-
-          for (const l of lanternsRef.current) {
-            const dx = p.x - l.x;
-            const dy = p.y - l.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist < 115) {
-              const prox = 1 - dist / 115;
-              if (prox > maxLanternProximity) maxLanternProximity = prox;
-            }
-            if (dy < 10 && dy > -65 && Math.abs(dx) < 38) {
-              thermalVx = (dx >= 0 ? 1 : -1) * 0.09;
-            }
-          }
-
-          if (stepPhysics && !prefersReducedMotion) {
-            const breezeVx =
-              p.baseVx +
-              Math.sin(tick * 0.22) * 0.1 +
-              Math.cos(tick * 0.95 + p.phase) * 0.22;
-            const fallWave = Math.sin(tick * 0.9 + p.phase) * 0.03;
-            p.x += (breezeVx + thermalVx) * dtScale;
-            p.y += (UNIFORM_PETAL_FALL_SPEED + fallWave) * dtScale;
-            p.yaw += p.yawSpeed * dtScale;
-            p.pitch += p.pitchSpeed * dtScale;
-            p.roll += p.rollSpeed * dtScale;
-
-            if (p.y > height + 20) {
-              p.y = -20;
-              p.x = p.spawnXRatio * width;
-            }
-            if (p.x > width + 24) {
-              p.x = -18;
-            } else if (p.x < -24) {
-              p.x = width + 18;
-            }
-          }
-
-          drawFallingSakuraPetal(ctx, p, maxLanternProximity);
-        }
-      };
-
       // 2A. Far-Plane Falling Sakura Petals
-      stepAndDrawFallingPetals("far");
+      stepAndDrawFallingPetals(farPetals, visibleLanternCount, stepPhysics, dtScale);
 
       // 2B. Step & Render Width-Proportional Kongming Lanterns (~1 per 220px for larger, detailed lanterns)
-      const visibleLanternCount = Math.max(
-        2,
-        Math.min(lanternsRef.current.length, Math.round(width / 220))
-      );
-      const visibleLanterns = lanternsRef.current.slice(0, visibleLanternCount);
-      let foundHover: { item: LanternQuote; x: number; y: number } | null =
-        null;
+      const visibleLanterns = lanternsRef.current;
 
-      for (let i = 0; i < visibleLanterns.length; i++) {
+      const parkedCheckBucket = Math.floor(tick * 2.5);
+      const canCheckParked = parkedCheckBucket !== lastParkedCheckBucket;
+      if (canCheckParked) lastParkedCheckBucket = parkedCheckBucket;
+
+      for (let i = 0; i < visibleLanternCount; i++) {
         const l = visibleLanterns[i];
-        const distToMouse = mouseRef.current.active
-          ? Math.hypot(l.x - mx, l.y - my)
-          : 9999;
-        const isHovered = distToMouse < 30 * l.scale + 12;
+        let isHovered = false;
+        if (mouseRef.current.active && l.fadeAlpha > 0.1) {
+          const dx = l.x - mx;
+          const dy = l.y - my;
+          const hoverR = 30 * l.scale + 12;
+          isHovered = dx * dx + dy * dy < hoverR * hoverR;
+        }
 
         if (!isHovered && stepPhysics && !prefersReducedMotion) {
           const harmonicBreath = Math.cos(tick * 0.6 + l.phase) * 0.02;
@@ -1169,64 +1257,98 @@ export function NightSkyInteractive({
           l.x = l.baseX + Math.sin(tick * l.swayFreq + l.phase) * l.swayAmp;
           if (l.y < topLimit) {
             const nowMs = performance.now();
-            const laneCount =
-              width >= 1024 ? WIDE_SKY_LANES.length : SKY_LANES.length;
-            let bestLaneIdx = i % laneCount;
-            let bestX = getLaneX(bestLaneIdx, width);
-            let bestY = curBottomLimit + 20 + Math.random() * 80;
-            let bestScore = -Infinity;
+            if (
+              (l.y <= -250 && !canCheckParked) ||
+              nowMs - lastGlobalSpawnMs < GLOBAL_SPAWN_COOLDOWN_MS
+            ) {
+              l.y = -300;
+            } else {
+              const activeLanes = width >= 1024 ? WIDE_SKY_LANES : SKY_LANES;
+              let bestLaneIdx = -1;
+              let bestX = l.baseX;
+              let bestY = curBottomLimit + 24;
+              let bestScore = -Infinity;
 
-            for (let attempt = 0; attempt < 10; attempt++) {
-              const candLaneIdx =
-                (attempt === 0
-                  ? i
-                  : Math.floor(Math.random() * visibleLanterns.length)) %
-                laneCount;
-              const lastSpawn = laneLastSpawnMs.get(candLaneIdx) ?? -Infinity;
-              const onCooldown = nowMs - lastSpawn < LANE_COOLDOWN_MS;
-              const candX = Math.max(
-                32,
-                Math.min(width - 32, getLaneX(candLaneIdx, width))
-              );
-              const candY = curBottomLimit + 18 + Math.random() * 110;
-              let minDist = Infinity;
-              for (let j = 0; j < visibleLanterns.length; j++) {
-                if (j === i) continue;
-                const other = visibleLanterns[j];
-                const d = Math.hypot(other.baseX - candX, other.y - candY);
-                if (d < minDist) minDist = d;
+              const candY = curBottomLimit + 24;
+              const minColGap = 28;
+              const colClearY = curBottomLimit * 0.6;
+              for (
+                let candLaneIdx = 0;
+                candLaneIdx < activeLanes.length;
+                candLaneIdx++
+              ) {
+                const laneNorm = activeLanes[candLaneIdx];
+                // On wide screens, only spawn in side margin lanes so text stays readable
+                if (width >= 1024 && !isSideLane(laneNorm)) continue;
+
+                const candX = Math.max(
+                  32,
+                  Math.min(width - 32, laneNorm * width)
+                );
+                let minDistSq = Infinity;
+                let columnBlocked = false;
+                for (let j = 0; j < visibleLanternCount; j++) {
+                  if (j === i) continue;
+                  const other = visibleLanterns[j];
+                  if (other.y < topLimit) continue;
+                  const dx = other.baseX - candX;
+                  if (Math.abs(dx) < minColGap && other.y > colClearY) {
+                    columnBlocked = true;
+                    break;
+                  }
+                  const dy = other.y - candY;
+                  const dSq = dx * dx + dy * dy;
+                  if (dSq < minDistSq) minDistSq = dSq;
+                }
+                if (columnBlocked || minDistSq < 22500) continue;
+
+                const centerPenalty = isSideLane(laneNorm) ? 0 : 320;
+                const candHalf = laneNorm < 0.5 ? "left" : "right";
+                const oppositeBonus =
+                  lastSpawnHalf !== null && candHalf !== lastSpawnHalf
+                    ? 120
+                    : 0;
+                const score =
+                  Math.sqrt(minDistSq) - centerPenalty + oppositeBonus;
+                if (score > bestScore) {
+                  bestScore = score;
+                  bestLaneIdx = candLaneIdx;
+                  bestX = candX;
+                  bestY = candY;
+                }
               }
-              const score = onCooldown ? minDist - 1000 : minDist;
-              if (score > bestScore) {
-                bestScore = score;
-                bestLaneIdx = candLaneIdx;
-                bestX = candX;
-                bestY = candY;
+
+              if (bestLaneIdx === -1) {
+                // Hold off-screen until a clean side-lane spawn point opens up
+                l.y = -300;
+              } else {
+                lastGlobalSpawnMs = nowMs;
+                lastSpawnHalf =
+                  activeLanes[bestLaneIdx] < 0.5 ? "left" : "right";
+                l.baseX = bestX;
+                l.y = bestY;
+                l.speedFactor = 0.95 + Math.random() * 0.1;
+                l.item =
+                  INSPIRATIONAL_LANTERNS[
+                    quoteQueueCursor % INSPIRATIONAL_LANTERNS.length
+                  ];
+                quoteQueueCursor =
+                  (quoteQueueCursor + 1) % INSPIRATIONAL_LANTERNS.length;
               }
-              if (!onCooldown && minDist >= 120) break;
             }
-
-            laneLastSpawnMs.set(bestLaneIdx, nowMs);
-            l.baseX = bestX;
-            l.y = bestY;
-            l.speedFactor = 0.85 + Math.random() * 0.3;
-            l.item =
-              INSPIRATIONAL_LANTERNS[
-                quoteQueueCursor % INSPIRATIONAL_LANTERNS.length
-              ];
-            quoteQueueCursor =
-              (quoteQueueCursor + 1) % INSPIRATIONAL_LANTERNS.length;
           }
-        } else if (isHovered && !foundHover) {
-          foundHover = { item: l.item, x: l.x, y: l.y };
         }
 
+        const introRaw = prefersReducedMotion
+          ? 1
+          : Math.max(0, Math.min(1, (tick - i * 0.06) / 0.75));
+        const introFade = 1 - (1 - introRaw) * (1 - introRaw);
         const horizonFade = Math.max(
           0,
           Math.min(1, (curBottomLimit - l.y) / 52)
         );
         const topFade = Math.max(0, Math.min(1, (l.y + 14) / 44));
-        const fadeAlpha = Math.min(horizonFade, topFade);
+        const fadeAlpha = Math.min(horizonFade, topFade) * introFade;
         l.fadeAlpha = fadeAlpha;
 
         const pal = HUE_PALETTES[l.item.hue] || HUE_PALETTES.amber;
@@ -1274,21 +1396,22 @@ export function NightSkyInteractive({
         lakeH,
         tick,
         visibleLanterns,
-        floatingPetalsRef.current
+        visibleLanternCount,
+        floatingPetalsRef.current,
+        shimmerGrad,
+        petalPath,
+        petalGrads
       );
 
       // 3. Mid-Plane & Near-Plane Falling Sakura Petals
-      stepAndDrawFallingPetals("mid");
-      stepAndDrawFallingPetals("near");
-
-      const nextHoverId = foundHover?.item.id ?? null;
-      if (nextHoverId !== lastHoverId) {
-        lastHoverId = nextHoverId;
-      }
+      stepAndDrawFallingPetals(midPetals, visibleLanternCount, stepPhysics, dtScale);
+      stepAndDrawFallingPetals(nearPetals, visibleLanternCount, stepPhysics, dtScale);
     };
 
-    const handleResize = () => {
+    const runResize = () => {
+      resizeRafId = 0;
       if (!canvas) return;
+      const prevWidth = width;
       const prevHeight = height;
       const prevWaterY = getWaterY(height);
       const prevSpan = Math.max(1, prevWaterY - 6 - topLimit);
@@ -1299,10 +1422,17 @@ export function NightSkyInteractive({
       const nextSpan = Math.max(1, nextWaterY - 6 - topLimit);
       const nextLakeH = getLakeHeight(height);
 
-      lanternsRef.current.forEach((l, idx) => {
-        l.baseX = getLaneX(idx, width);
-        const normY = (l.y - topLimit) / prevSpan;
-        l.y = topLimit + normY * nextSpan;
+      lanternsRef.current.forEach((l) => {
+        const normX = l.baseX / Math.max(1, prevWidth);
+        if (width >= 1024 && !isSideLane(normX, width)) {
+          l.y = -300;
+        } else {
+          l.baseX = Math.max(32, Math.min(width - 32, normX * width));
+          if (l.y >= topLimit) {
+            const normY = (l.y - topLimit) / prevSpan;
+            l.y = topLimit + normY * nextSpan;
+          }
+        }
         l.x = l.baseX + Math.sin(tick * l.swayFreq + l.phase) * l.swayAmp;
       });
 
@@ -1319,17 +1449,20 @@ export function NightSkyInteractive({
       paintScene(false);
     };
 
+    const handleResize = () => {
+      if (resizeRafId) return;
+      resizeRafId = requestAnimationFrame(runResize);
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
-      // Only activate lantern hover tooltips over open sky, never over foreground content cards/header/dialogs
+      // Only activate lantern hover over open sky, never over foreground content cards/header/dialogs
       const overForegroundUi = Boolean(
         target?.closest("main, header, footer, [role='dialog']")
       );
-      mouseRef.current = {
-        x: e.clientX,
-        y: e.clientY,
-        active: !overForegroundUi,
-      };
+      mouseRef.current.x = e.clientX;
+      mouseRef.current.y = e.clientY;
+      mouseRef.current.active = !overForegroundUi;
       if (prefersReducedMotion) {
         paintScene(false);
       }
@@ -1337,11 +1470,10 @@ export function NightSkyInteractive({
 
     const handleMouseLeave = () => {
       mouseRef.current.active = false;
-      lastHoverId = null;
     };
 
     const renderLoop = (now = performance.now()) => {
-      if (document.hidden) {
+      if (document.hidden || pausedRef.current) {
         animId = 0;
         return;
       }
@@ -1354,26 +1486,35 @@ export function NightSkyInteractive({
       }
     };
 
+    const resumeIfActive = () => {
+      if (!document.hidden && !pausedRef.current && !prefersReducedMotion && !animId) {
+        lastFrameTime = performance.now();
+        animId = requestAnimationFrame(renderLoop);
+      }
+    };
+    resumeLoopRef.current = resumeIfActive;
+
     const handleVisibilityChange = () => {
       if (document.hidden) {
         if (animId) {
           cancelAnimationFrame(animId);
           animId = 0;
         }
-      } else if (!prefersReducedMotion && !animId) {
-        lastFrameTime = performance.now();
-        animId = requestAnimationFrame(renderLoop);
+      } else {
+        resumeIfActive();
       }
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     renderLoop();
     return () => {
+      resumeLoopRef.current = null;
       cancelAnimationFrame(animId);
+      cancelAnimationFrame(resizeRafId);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
@@ -1390,4 +1531,4 @@ export function NightSkyInteractive({
       className="fixed inset-0 pointer-events-none z-0 opacity-35 sm:opacity-50 lg:opacity-65"
     />
   );
-}
+});
